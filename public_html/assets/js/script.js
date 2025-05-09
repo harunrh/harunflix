@@ -1,5 +1,4 @@
 $(document).ready(function() {
-    
     // Add these lines near the beginning
     $('#grid-view').on('click', function() {
         $('#grid-container').removeClass('d-none');
@@ -475,4 +474,86 @@ $(document).ready(function() {
         const initialValue = parseFloat($('.rating-input').val()) || 8.0;
         $('.rating-input').val(initialValue.toFixed(1));
     }
+    
+// Hero Banner Poster Enhancements
+$(document).ready(function() {
+    // Pause animations when page is not visible for performance
+    document.addEventListener('visibilitychange', function() {
+        const posterRows = document.querySelectorAll('.poster-row');
+        if (document.hidden) {
+            posterRows.forEach(row => {
+                row.style.animationPlayState = 'paused';
+            });
+        } else {
+            posterRows.forEach(row => {
+                row.style.animationPlayState = 'running';
+            });
+        }
+    });
+
+    // Make posters interactive
+    $('.poster').hover(
+        function() {
+            $(this).css({
+                'transform': 'rotate(0deg) scale(1.1)',
+                'opacity': '1',
+                'filter': 'grayscale(0%)',
+                'z-index': '10'
+            });
+        },
+        function() {
+            // Reset to original styles based on position
+            if ($(this).index() % 2 === 0) {
+                $(this).css({
+                    'transform': 'rotate(-3deg) scale(0.9)',
+                    'opacity': '0.7',
+                    'filter': 'grayscale(30%)',
+                    'z-index': '1'
+                });
+            } else if ($(this).index() % 3 === 0) {
+                $(this).css({
+                    'transform': 'rotate(-1deg) scale(0.95)',
+                    'opacity': '0.7',
+                    'filter': 'grayscale(30%)',
+                    'z-index': '1'
+                });
+            } else {
+                $(this).css({
+                    'transform': 'rotate(2deg) scale(0.85)',
+                    'opacity': '0.7',
+                    'filter': 'grayscale(30%)',
+                    'z-index': '1'
+                });
+            }
+        }
+    );
+
+    // Make posters clickable - simplified for better performance
+    $('.poster').on('click', function() {
+        // Instead of random, go to a featured movie ID
+        window.location.href = `review.php?id=299534`; // Endgame as an example
+    });
+
+    // Check if we're on a mobile device to optimize
+    const isMobile = window.innerWidth <= 768;
+    
+    // Adjust poster behavior for mobile
+    if (isMobile) {
+        // Reduce the number of posters for better performance on mobile
+        const posterRows = document.querySelectorAll('.poster-row');
+        posterRows.forEach(row => {
+            // Keep only 5 posters per row on mobile
+            const posters = row.querySelectorAll('.poster');
+            for (let i = 5; i < posters.length; i++) {
+                posters[i].style.display = 'none';
+            }
+        });
+    }
+
+    // Search results positioning fix for hero section
+    $('#movie-search-hero').on('focus', function() {
+        // Ensure the results container is properly positioned
+        const searchContainer = $(this).closest('.col-md-8');
+        searchContainer.css('position', 'relative');
+    });
 });
