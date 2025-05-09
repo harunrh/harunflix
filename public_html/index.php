@@ -161,19 +161,50 @@ $recent_activity = get_recent_activity();
 include 'templates/header.php'; 
 ?>
 
-<!-- Search Section (replacing hero) -->
-<div class="search-container pt-5 pb-4 text-center">
-    <div class="container">
-        <h1 class="mb-4">Find Your Next Movie to Review</h1>
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="input-group input-group-lg">
-                    <input type="text" class="form-control" id="movie-search-hero" placeholder="Search movies...">
-                    <button class="btn btn-primary" type="button">
-                        <i class="fas fa-search"></i>
-                    </button>
+<!-- Hero Section with Scrolling Movie Banner -->
+<div class="hero-banner">
+    <!-- Scrolling Poster Background - Simplified for performance -->
+    <div class="poster-scroll-container">
+        <div class="poster-scroll">
+            <div class="poster-row poster-row-1">
+                <div class="poster"><img src="https://image.tmdb.org/t/p/w500/1E5baAaEse26fej7uHcjOgEE2t2.jpg" alt="Movie Poster"></div>
+                <div class="poster"><img src="https://image.tmdb.org/t/p/w500/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg" alt="Movie Poster"></div>
+                <div class="poster"><img src="https://image.tmdb.org/t/p/w500/7WsyChQLEftFiDOVTGkv3hFpyyt.jpg" alt="Movie Poster"></div>
+                <div class="poster"><img src="https://image.tmdb.org/t/p/w500/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg" alt="Movie Poster"></div>
+                <div class="poster"><img src="https://image.tmdb.org/t/p/w500/5KCVkau1HEl7ZzfPsKAPM0sMiKc.jpg" alt="Movie Poster"></div>
+                <!-- Only duplicated once for better performance -->
+                <div class="poster"><img src="https://image.tmdb.org/t/p/w500/1E5baAaEse26fej7uHcjOgEE2t2.jpg" alt="Movie Poster"></div>
+                <div class="poster"><img src="https://image.tmdb.org/t/p/w500/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg" alt="Movie Poster"></div>
+            </div>
+            <div class="poster-row poster-row-2">
+                <div class="poster"><img src="https://image.tmdb.org/t/p/w500/saHP97rTPS5eLmrLQEcANmKrsFl.jpg" alt="Movie Poster"></div>
+                <div class="poster"><img src="https://image.tmdb.org/t/p/w500/8Vt6mWEReuy4Of61Lnj5Xj704m8.jpg" alt="Movie Poster"></div>
+                <div class="poster"><img src="https://image.tmdb.org/t/p/w500/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg" alt="Movie Poster"></div>
+                <div class="poster"><img src="https://image.tmdb.org/t/p/w500/2l05cFWJacyIsTpsqSgH0wQXe4V.jpg" alt="Movie Poster"></div>
+                <div class="poster"><img src="https://image.tmdb.org/t/p/w500/b6IRp6Pl2Fsq37r9jFhGoLtaqHm.jpg" alt="Movie Poster"></div>
+                <!-- Only duplicated once for better performance -->
+                <div class="poster"><img src="https://image.tmdb.org/t/p/w500/saHP97rTPS5eLmrLQEcANmKrsFl.jpg" alt="Movie Poster"></div>
+                <div class="poster"><img src="https://image.tmdb.org/t/p/w500/8Vt6mWEReuy4Of61Lnj5Xj704m8.jpg" alt="Movie Poster"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Overlay with Content -->
+    <div class="hero-overlay"></div>
+    
+    <div class="container position-relative">
+        <div class="hero-content text-center">
+            <h1 class="mb-3">Discover & Share Movie Reviews</h1>
+            <div class="row justify-content-center">
+                <div class="col-md-8 position-relative"> <!-- Added position-relative for proper search results positioning -->
+                    <div class="input-group input-group-lg">
+                        <input type="text" class="form-control" id="movie-search-hero" placeholder="Search movies...">
+                        <button class="btn btn-primary" type="button">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                    <div id="search-results-hero" class="mt-2 text-start"></div>
                 </div>
-                <div id="search-results-hero" class="mt-2 text-start"></div>
             </div>
         </div>
     </div>
