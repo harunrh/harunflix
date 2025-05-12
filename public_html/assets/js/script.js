@@ -475,20 +475,35 @@ $(document).ready(function() {
         $('.rating-input').val(initialValue.toFixed(1));
     }
     
-// Hero Banner Poster Enhancements
-$(document).ready(function() {
-    // Pause animations when page is not visible for performance
-    document.addEventListener('visibilitychange', function() {
-        const posterRows = document.querySelectorAll('.poster-row');
-        if (document.hidden) {
-            posterRows.forEach(row => {
-                row.style.animationPlayState = 'paused';
-            });
-        } else {
-            posterRows.forEach(row => {
-                row.style.animationPlayState = 'running';
-            });
-        }
+    // Hero Banner Poster Enhancements for Smooth Animation
+    // Preload poster images for smoother animation
+    document.addEventListener('DOMContentLoaded', function() {
+        const posterImages = document.querySelectorAll('.poster img');
+        
+        posterImages.forEach(img => {
+            // Force image preloading
+            const preloadImg = new Image();
+            preloadImg.src = img.src;
+            
+            // Add error handling for poster images
+            img.onerror = function() {
+                this.src = 'assets/img/no-poster.jpg';
+            };
+        });
+        
+        // Pause animations when page is not visible for performance
+        document.addEventListener('visibilitychange', function() {
+            const posterRows = document.querySelectorAll('.poster-row');
+            if (document.hidden) {
+                posterRows.forEach(row => {
+                    row.style.animationPlayState = 'paused';
+                });
+            } else {
+                posterRows.forEach(row => {
+                    row.style.animationPlayState = 'running';
+                });
+            }
+        });
     });
 
     // Make posters interactive
@@ -528,10 +543,15 @@ $(document).ready(function() {
         }
     );
 
-    // Make posters clickable - simplified for better performance
+    // Make posters clickable
     $('.poster').on('click', function() {
-        // Instead of random, go to a featured movie ID
-        window.location.href = `review.php?id=299534`; // Endgame as an example
+        const movieId = $(this).data('movie-id');
+        if (movieId) {
+            window.location.href = `review.php?id=${movieId}`;
+        } else {
+            // If no specific movie ID, redirect to movies page
+            window.location.href = 'movies.php';
+        }
     });
 
     // Check if we're on a mobile device to optimize
@@ -539,14 +559,13 @@ $(document).ready(function() {
     
     // Adjust poster behavior for mobile
     if (isMobile) {
-        // Reduce the number of posters for better performance on mobile
-        const posterRows = document.querySelectorAll('.poster-row');
-        posterRows.forEach(row => {
-            // Keep only 5 posters per row on mobile
-            const posters = row.querySelectorAll('.poster');
-            for (let i = 5; i < posters.length; i++) {
-                posters[i].style.display = 'none';
-            }
+        // Reduce animation speed on mobile for better performance
+        document.querySelectorAll('.poster-row-1').forEach(row => {
+            row.style.animationDuration = '120s';
+        });
+        
+        document.querySelectorAll('.poster-row-2').forEach(row => {
+            row.style.animationDuration = '110s';
         });
     }
 
