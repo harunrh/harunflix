@@ -51,11 +51,16 @@ body {
 /* HEADER FIX: Add additional spacing to content rows */
 .content-row {
   margin-top: 20px;
+  margin-bottom: 40px;
 }
 
 /* Adjust the following as well */
 .content-row:first-child {
   padding-top: 20px;
+}
+
+.content-row h2 {
+  margin-bottom: 15px;
 }
 
 /* HEADER FIX: Add spacing to profile and search sections */
@@ -64,7 +69,16 @@ body {
 }
 
 .search-container {
+  background-color: var(--dark-bg);
+  color: var(--light-text);
+  padding: 50px 0;
   margin-top: 20px;
+  margin-bottom: 30px;
+}
+
+.search-container h1 {
+  font-weight: 700;
+  margin-bottom: 20px;
 }
 
 .card {
@@ -312,14 +326,6 @@ body {
 }
 
 /* Netflix-style rows */
-.content-row {
-  margin-bottom: 40px;
-}
-
-.content-row h2 {
-  margin-bottom: 15px;
-}
-
 .content-row .card-slider {
   display: flex;
   overflow-x: auto;
@@ -337,127 +343,6 @@ body {
   width: 180px;
   margin-right: 10px;
   scroll-snap-align: start;
-}
-
-@media (max-width: 768px) {
-  /* HEADER FIX: Adjust padding for mobile */
-  body {
-    padding-top: 60px;
-  }
-
-  .content-row .movie-card-container {
-    width: 140px;
-  }
-  
-  .navbar-brand img {
-    height: 30px;
-  }
-  
-  .mobile-menu {
-    position: fixed;
-    bottom: 10px; /* Moved up from bottom edge */
-    left: 50%;
-    transform: translateX(-50%);
-    width: 95%; /* Not full width */
-    background-color: rgba(20, 20, 20, 0.95);
-    display: flex;
-    justify-content: space-around;
-    padding: 10px 0;
-    border-radius: 15px; /* Rounded corners */
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.5);
-    z-index: 1000;
-  }
-  
-  .mobile-menu-item {
-    text-align: center;
-    color: var(--gray-text);
-    text-decoration: none;
-    font-size: 0.8rem;
-  }
-  
-  .mobile-menu-item i {
-    font-size: 1.2rem;
-    display: block;
-    margin-bottom: 4px;
-  }
-  
-  .mobile-menu-item.active {
-    color: var(--primary-color);
-  }
-}
-
-/* Hero section styles */
-.hero-section {
-  background-size: cover;
-  background-position: center 20%;
-  background-repeat: no-repeat;
-  color: white;
-  position: relative;
-  padding: 100px 0 60px;
-  margin-bottom: 30px;
-}
-
-.hero-section::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(to bottom, rgba(20, 20, 20, 0.8) 0%, var(--dark-bg) 100%);
-}
-
-.hero-content {
-  position: relative;
-  z-index: 1;
-}
-
-.hero-title {
-  font-size: 2.5rem;
-  font-weight: 700;
-  margin-bottom: 15px;
-}
-
-@media (max-width: 768px) {
-  .hero-title {
-    font-size: 1.8rem;
-  }
-  
-  .hero-section {
-    padding: 80px 0 40px;
-  }
-  
-  /* User table mobile improvements */
-  #users-table th:nth-child(2), 
-  #users-table td:nth-child(2) {
-    display: none; /* Hide "Joined On" column on mobile */
-  }
-  
-  #users-table th:nth-child(5), 
-  #users-table td:nth-child(5) {
-    display: none; /* Hide "Action" column on mobile */
-  }
-  
-  #users-table .avatar,
-  #users-table img {
-    width: 30px !important;
-    height: 30px !important;
-    font-size: 14px !important;
-  }
-  
-  /* Make entire user row clickable */
-  #users-table tbody tr {
-    cursor: pointer;
-  }
-  
-  /* Modal improvements */
-  .modal-dialog {
-    margin: 10px;
-  }
-  
-  .modal-body {
-    padding: 15px;
-  }
 }
 
 /* Badge styles */
@@ -723,21 +608,6 @@ body.light-theme footer a:hover {
   background: rgba(255, 255, 255, 0.3);
 }
 
-/* New styles for improved UX */
-
-/* Search container (replacing hero section) */
-.search-container {
-  background-color: var(--dark-bg);
-  color: var(--light-text);
-  padding: 50px 0;
-  margin-bottom: 30px;
-}
-
-.search-container h1 {
-  font-weight: 700;
-  margin-bottom: 20px;
-}
-
 /* List view for movies */
 .movie-list-item {
   display: flex;
@@ -809,16 +679,6 @@ body.light-theme footer a:hover {
   display: none;
 }
 
-@media (max-width: 768px) {
-  .compact-date {
-    display: none;
-  }
-  
-  .compact-date-mobile {
-    display: inline;
-  }
-}
-
 /* Improved form validation styling */
 .form-error {
   font-size: 0.8rem;
@@ -863,27 +723,6 @@ body.light-theme footer a:hover {
   font-size: 18px;
 }
 
-/* Mobile-friendly user list */
-@media (max-width: 768px) {
-  .list-group-item {
-    padding: 12px; /* Slightly more padding */
-  }
-  
-  .list-group-item h6 {
-    font-size: 1rem; /* Larger username */
-    margin-bottom: 2px; /* Space between username and joined date */
-  }
-  
-  .list-group-item .badge {
-    font-size: 0.85rem; /* Larger badge text */
-  }
-  
-  .list-group-item .text-muted {
-    font-size: 0.8rem; /* Slightly smaller date text */
-    opacity: 0.9; /* More visible muted text */
-  }
-}
-
 /* Toggle view buttons */
 #grid-view.active, #list-view.active {
   background-color: var(--primary-color);
@@ -903,7 +742,7 @@ body.light-theme footer a:hover {
 #users-table th {
   color: var(--light-text);
   border-color: rgba(255, 255, 255, 0.1);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Add this line */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   background-color: var(--dark-card);
 }
 
@@ -926,179 +765,294 @@ body.light-theme .table tbody tr {
   background-color: white;
 }
 
-/* Add this for light theme */
 body.light-theme #users-table th {
   border-bottom: 1px solid #dee2e6; /* Light mode border */
 }
 
 /* Hero Banner with Scrolling Movie Posters as Background */
 .hero-banner {
-    position: relative;
-    color: var(--light-text);
-    padding: 80px 0 60px; /* Reduced padding to make it smaller */
-    margin-bottom: 40px;
-    overflow: hidden;
-    min-height: 350px; /* Reduced min-height */
-    display: flex;
-    align-items: center;
+  position: relative;
+  color: var(--light-text);
+  padding: 80px 0 60px;
+  margin-bottom: 40px;
+  overflow: hidden;
+  min-height: 350px;
+  display: flex;
+  align-items: center;
 }
 
 .hero-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(20, 20, 20, 0.8); /* Slightly more opaque */
-    z-index: 2;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(20, 20, 20, 0.8);
+  z-index: 2;
 }
 
 .hero-content {
-    position: relative;
-    z-index: 3;
-    padding: 20px 0; /* Reduced padding */
+  position: relative;
+  z-index: 3;
+  padding: 20px 0;
 }
 
 .hero-content h1 {
-    font-size: 2.5rem; /* Smaller font size */
-    font-weight: 800;
-    margin-bottom: 20px;
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 20px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
 }
 
-/* Poster scroll background */
+/* Poster scroll background - IMPROVED */
 .poster-scroll-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-    overflow: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  overflow: hidden;
 }
 
 .poster-scroll {
-    position: absolute;
-    width: 100%;
-    height: 100%;
+  position: absolute;
+  width: 100%;
+  height: 100%;
 }
 
 .poster-row {
-    position: absolute;
-    display: flex;
-    width: fit-content;
-    transition: transform 0.3s ease;
+  position: absolute;
+  display: flex;
+  width: max-content; /* Better browser compatibility than fit-content */
 }
 
+/* Fix the initial position of the rows */
 .poster-row-1 {
-    top: -5%;
-    animation: scrollLeft 80s linear infinite;
+  top: -5%;
+  left: 0; /* Start from the beginning */
+  animation: scrollLeft 80s linear infinite;
 }
 
 .poster-row-2 {
-    bottom: -5%;
-    animation: scrollRight 75s linear infinite;
+  bottom: -5%;
+  left: 0; /* Position correctly */
+  transform: translateX(-50%); /* Start at halfway point to offset the animation */
+  animation: scrollRight 75s linear infinite;
 }
 
 .poster {
-    flex: 0 0 auto;
-    height: 300px; /* Smaller posters */
-    margin: 0 8px;
-    overflow: hidden;
-    transform: rotate(-3deg) scale(0.9);
-    transition: transform 0.5s ease, opacity 0.3s ease, filter 0.3s ease;
-    opacity: 0.7;
-    filter: grayscale(30%);
-    cursor: pointer;
+  flex: 0 0 auto;
+  height: 300px;
+  margin: 0 8px;
+  overflow: hidden;
+  transform: rotate(-3deg) scale(0.9);
+  transition: transform 0.5s ease, opacity 0.3s ease, filter 0.3s ease;
+  opacity: 0.7;
+  filter: grayscale(30%);
+  cursor: pointer;
 }
 
 .poster:nth-child(odd) {
-    transform: rotate(2deg) scale(0.85);
+  transform: rotate(2deg) scale(0.85);
 }
 
 .poster:nth-child(3n) {
-    transform: rotate(-1deg) scale(0.95);
+  transform: rotate(-1deg) scale(0.95);
 }
 
 .poster img {
-    height: 100%;
-    width: auto;
-    object-fit: cover;
-    border-radius: 8px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  height: 100%;
+  width: auto;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
 }
 
+/* Improved infinite scrolling animations */
 @keyframes scrollLeft {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
 
 @keyframes scrollRight {
-    0% { transform: translateX(-50%); }
-    100% { transform: translateX(0); }
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
 }
 
-/* Input field styling */
+/* Input field styling for hero banner */
 .hero-content .form-control {
-    padding: 12px 20px;
-    background-color: rgba(0, 0, 0, 0.4);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  padding: 12px 20px;
+  background-color: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
 }
 
 .hero-content .btn-primary {
-    padding: 12px 25px;
-}
-
-/* Media queries for improved mobile responsiveness */
-@media (max-width: 768px) {
-    .hero-banner {
-        padding: 70px 0 40px;
-        min-height: 320px;
-    }
-    
-    .hero-content h1 {
-        font-size: 1.8rem;
-    }
-    
-    .poster {
-        height: 240px; /* Even smaller on mobile */
-    }
-    
-    .poster-row-1 {
-        top: 5%; /* Adjust position for better visibility */
-    }
-    
-    .poster-row-2 {
-        bottom: 5%;
-    }
-    
-    /* Slow down animations on mobile for better performance */
-    .poster-row-1 {
-        animation-duration: 120s;
-    }
-    
-    .poster-row-2 {
-        animation-duration: 100s;
-    }
-    
-    /* Ensure search results display properly on mobile */
-    #search-results-hero {
-        position: absolute;
-        width: 100%;
-        z-index: 100;
-    }
+  padding: 12px 25px;
 }
 
 /* Light theme adjustments for hero banner */
 body.light-theme .hero-overlay {
-    background: rgba(245, 245, 241, 0.85);
+  background: rgba(245, 245, 241, 0.85);
 }
 
 body.light-theme .hero-content {
-    color: #333;
+  color: #333;
 }
 
 body.light-theme .hero-content h1 {
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* Media queries for mobile responsiveness */
+@media (max-width: 768px) {
+  /* HEADER FIX: Adjust padding for mobile */
+  body {
+    padding-top: 60px;
+  }
+
+  .content-row .movie-card-container {
+    width: 140px;
+  }
+  
+  .navbar-brand img {
+    height: 30px;
+  }
+  
+  .hero-banner {
+    padding-top: 40px; /* Reduced from 80px */
+    padding-bottom: 30px; /* Reduced from 60px */
+    min-height: 300px; /* Reduced from 350px */
+  }
+  
+  .hero-content {
+    padding: 10px 0; /* Reduced from 20px */
+  }
+  
+  .hero-content h1 {
+    font-size: 2rem; /* Slightly smaller heading */
+    margin-bottom: 15px; /* Reduced from 20px */
+  }
+  
+  .poster {
+    height: 240px; /* Even smaller on mobile */
+  }
+  
+  .poster-row-1 {
+    top: 5%; /* Adjust position for better visibility */
+    animation-duration: 120s;
+  }
+  
+  .poster-row-2 {
+    bottom: 5%;
+    animation-duration: 100s;
+  }
+  
+  /* Ensure search results display properly on mobile */
+  #search-results-hero {
+    position: absolute;
+    width: 100%;
+    z-index: 100;
+  }
+  
+  .compact-date {
+    display: none;
+  }
+  
+  .compact-date-mobile {
+    display: inline;
+  }
+  
+  .hero-title {
+    font-size: 1.8rem;
+  }
+  
+  .hero-section {
+    padding: 80px 0 40px;
+  }
+  
+  /* User table mobile improvements */
+  #users-table th:nth-child(2), 
+  #users-table td:nth-child(2) {
+    display: none; /* Hide "Joined On" column on mobile */
+  }
+  
+  #users-table th:nth-child(5), 
+  #users-table td:nth-child(5) {
+    display: none; /* Hide "Action" column on mobile */
+  }
+  
+  #users-table .avatar,
+  #users-table img {
+    width: 30px !important;
+    height: 30px !important;
+    font-size: 14px !important;
+  }
+  
+  /* Make entire user row clickable */
+  #users-table tbody tr {
+    cursor: pointer;
+  }
+  
+  /* Modal improvements */
+  .modal-dialog {
+    margin: 10px;
+  }
+  
+  .modal-body {
+    padding: 15px;
+  }
+  
+  /* Mobile menu styles */
+  .mobile-menu {
+    position: fixed;
+    bottom: 10px; /* Moved up from bottom edge */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 95%; /* Not full width */
+    background-color: rgba(20, 20, 20, 0.95);
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0;
+    border-radius: 15px; /* Rounded corners */
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+  }
+  
+  .mobile-menu-item {
+    text-align: center;
+    color: var(--gray-text);
+    text-decoration: none;
+    font-size: 0.8rem;
+  }
+  
+  .mobile-menu-item i {
+    font-size: 1.2rem;
+    display: block;
+    margin-bottom: 4px;
+  }
+  
+  .mobile-menu-item.active {
+    color: var(--primary-color);
+  }
+  
+  /* Mobile-friendly user list */
+  .list-group-item {
+    padding: 12px; /* Slightly more padding */
+  }
+  
+  .list-group-item h6 {
+    font-size: 1rem; /* Larger username */
+    margin-bottom: 2px; /* Space between username and joined date */
+  }
+  
+  .list-group-item .badge {
+    font-size: 0.85rem; /* Larger badge text */
+  }
+  
+  .list-group-item .text-muted {
+    font-size: 0.8rem; /* Slightly smaller date text */
+    opacity: 0.9; /* More visible muted text */
+  }
 }
