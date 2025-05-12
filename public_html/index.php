@@ -1,6 +1,42 @@
 <?php 
 require_once '../private/functions.php';
 
+// Function to get random poster paths for the hero banner
+function get_random_poster_paths($count = 10) {
+    global $conn;
+    
+    // First try to get posters from our database of reviewed movies
+    $query = "SELECT DISTINCT movie_id FROM reviews ORDER BY RAND() LIMIT ?";
+    $stmt = mysqli_prepare($conn, $query);
+    mysqli_stmt_bind_param($stmt, "i", $count);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    
+    $poster_paths = [];
+    while ($row = mysqli_fetch_assoc($result)) {
+        $movie_details = get_movie_details($row['movie_id']);
+        if (!empty($movie_details['poster_path'])) {
+            $poster_paths[] = $movie_details['poster_path'];
+        }
+    }
+    
+    // If we don't have enough posters, fetch popular movies from TMDB
+    if (count($poster_paths) < $count) {
+        $popular_movies = json_decode(file_get_contents(TMDB_API_URL . "/movie/popular?api_key=" . TMDB_API_KEY . "&page=1"), true);
+        
+        foreach ($popular_movies['results'] as $movie) {
+            if (!empty($movie['poster_path']) && !in_array($movie['poster_path'], $poster_paths)) {
+                $poster_paths[] = $movie['poster_path'];
+                if (count($poster_paths) >= $count) {
+                    break;
+                }
+            }
+        }
+    }
+    
+    return $poster_paths;
+}
+
 // Function to get recent reviews
 function get_recent_reviews($limit = 6) {
     global $conn;
@@ -158,33 +194,45 @@ $top_movies = get_top_rated_movies();
 $active_users = get_most_active_users();
 $recent_activity = get_recent_activity();
 
+// Get random posters for the animation
+$random_posters = get_random_poster_paths(14); // Get 14 random posters (7 for each row)
+
 include 'templates/header.php'; 
 ?>
 
 <!-- Hero Section with Scrolling Movie Banner -->
 <div class="hero-banner">
-    <!-- Scrolling Poster Background - Simplified for performance -->
+    <!-- Scrolling Poster Background -->
     <div class="poster-scroll-container">
         <div class="poster-scroll">
             <div class="poster-row poster-row-1">
-                <div class="poster"><img src="https://image.tmdb.org/t/p/w500/1E5baAaEse26fej7uHcjOgEE2t2.jpg" alt="Movie Poster"></div>
-                <div class="poster"><img src="https://image.tmdb.org/t/p/w500/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg" alt="Movie Poster"></div>
-                <div class="poster"><img src="https://image.tmdb.org/t/p/w500/7WsyChQLEftFiDOVTGkv3hFpyyt.jpg" alt="Movie Poster"></div>
-                <div class="poster"><img src="https://image.tmdb.org/t/p/w500/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg" alt="Movie Poster"></div>
-                <div class="poster"><img src="https://image.tmdb.org/t/p/w500/5KCVkau1HEl7ZzfPsKAPM0sMiKc.jpg" alt="Movie Poster"></div>
-                <!-- Only duplicated once for better performance -->
-                <div class="poster"><img src="https://image.tmdb.org/t/p/w500/1E5baAaEse26fej7uHcjOgEE2t2.jpg" alt="Movie Poster"></div>
-                <div class="poster"><img src="https://image.tmdb.org/t/p/w500/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg" alt="Movie Poster"></div>
+                <?php for ($i = 0; $i < 7; $i++): ?>
+                    <div class="poster">
+                        <img src="https://image.tmdb.org/t/p/w500<?php echo $random_posters[$i]; ?>" alt="Movie Poster">
+                    </div>
+                <?php endfor; ?>
+                
+                <!-- Duplicate the posters to create a seamless loop -->
+                <?php for ($i = 0; $i < 7; $i++): ?>
+                    <div class="poster">
+                        <img src="https://image.tmdb.org/t/p/w500<?php echo $random_posters[$i]; ?>" alt="Movie Poster">
+                    </div>
+                <?php endfor; ?>
             </div>
+            
             <div class="poster-row poster-row-2">
-                <div class="poster"><img src="https://image.tmdb.org/t/p/w500/saHP97rTPS5eLmrLQEcANmKrsFl.jpg" alt="Movie Poster"></div>
-                <div class="poster"><img src="https://image.tmdb.org/t/p/w500/8Vt6mWEReuy4Of61Lnj5Xj704m8.jpg" alt="Movie Poster"></div>
-                <div class="poster"><img src="https://image.tmdb.org/t/p/w500/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg" alt="Movie Poster"></div>
-                <div class="poster"><img src="https://image.tmdb.org/t/p/w500/2l05cFWJacyIsTpsqSgH0wQXe4V.jpg" alt="Movie Poster"></div>
-                <div class="poster"><img src="https://image.tmdb.org/t/p/w500/b6IRp6Pl2Fsq37r9jFhGoLtaqHm.jpg" alt="Movie Poster"></div>
-                <!-- Only duplicated once for better performance -->
-                <div class="poster"><img src="https://image.tmdb.org/t/p/w500/saHP97rTPS5eLmrLQEcANmKrsFl.jpg" alt="Movie Poster"></div>
-                <div class="poster"><img src="https://image.tmdb.org/t/p/w500/8Vt6mWEReuy4Of61Lnj5Xj704m8.jpg" alt="Movie Poster"></div>
+                <?php for ($i = 7; $i < 14; $i++): ?>
+                    <div class="poster">
+                        <img src="https://image.tmdb.org/t/p/w500<?php echo $random_posters[$i]; ?>" alt="Movie Poster">
+                    </div>
+                <?php endfor; ?>
+                
+                <!-- Duplicate the posters to create a seamless loop -->
+                <?php for ($i = 7; $i < 14; $i++): ?>
+                    <div class="poster">
+                        <img src="https://image.tmdb.org/t/p/w500<?php echo $random_posters[$i]; ?>" alt="Movie Poster">
+                    </div>
+                <?php endfor; ?>
             </div>
         </div>
     </div>
