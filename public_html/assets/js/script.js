@@ -575,4 +575,113 @@ $(document).ready(function() {
         const searchContainer = $(this).closest('.col-md-8');
         searchContainer.css('position', 'relative');
     });
+    
+    // Add this to the end of the existing script.js file or add it to your page
+
+// Slider control functionality
+document.addEventListener('DOMContentLoaded', function() {
+  // Get all slider controls
+  const prevButtons = document.querySelectorAll('.card-slider-control-prev');
+  const nextButtons = document.querySelectorAll('.card-slider-control-next');
+  
+  // Set up event listeners for previous buttons
+  prevButtons.forEach(btn => {
+    btn.addEventListener('click', function() {
+      const slider = this.parentElement.querySelector('.card-slider');
+      // Calculate scroll amount (about 4 cards worth)
+      const scrollAmount = slider.offsetWidth * 0.8;
+      slider.scrollBy({
+        left: -scrollAmount,
+        behavior: 'smooth'
+      });
+    });
+  });
+  
+  // Set up event listeners for next buttons
+  nextButtons.forEach(btn => {
+    btn.addEventListener('click', function() {
+      const slider = this.parentElement.querySelector('.card-slider');
+      // Calculate scroll amount (about 4 cards worth)
+      const scrollAmount = slider.offsetWidth * 0.8;
+      slider.scrollBy({
+        left: scrollAmount,
+        behavior: 'smooth'
+      });
+    });
+  });
+  
+  // Add touch-swipe support for mobile
+  const sliders = document.querySelectorAll('.card-slider');
+  
+  sliders.forEach(slider => {
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+    
+    slider.addEventListener('mousedown', (e) => {
+      isDown = true;
+      slider.classList.add('active');
+      startX = e.pageX - slider.offsetLeft;
+      scrollLeft = slider.scrollLeft;
+    });
+    
+    slider.addEventListener('mouseleave', () => {
+      isDown = false;
+      slider.classList.remove('active');
+    });
+    
+    slider.addEventListener('mouseup', () => {
+      isDown = false;
+      slider.classList.remove('active');
+    });
+    
+    slider.addEventListener('mousemove', (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - slider.offsetLeft;
+      const walk = (x - startX) * 2; // Scroll-fast
+      slider.scrollLeft = scrollLeft - walk;
+    });
+    
+    // Touch events for mobile
+    slider.addEventListener('touchstart', (e) => {
+      isDown = true;
+      slider.classList.add('active');
+      startX = e.touches[0].pageX - slider.offsetLeft;
+      scrollLeft = slider.scrollLeft;
+    });
+    
+    slider.addEventListener('touchend', () => {
+      isDown = false;
+      slider.classList.remove('active');
+    });
+    
+    slider.addEventListener('touchcancel', () => {
+      isDown = false;
+      slider.classList.remove('active');
+    });
+    
+    slider.addEventListener('touchmove', (e) => {
+      if (!isDown) return;
+      const x = e.touches[0].pageX - slider.offsetLeft;
+      const walk = (x - startX) * 2;
+      slider.scrollLeft = scrollLeft - walk;
+    });
+  });
+  
+  // Add hover effect for cards
+  const movieCards = document.querySelectorAll('.movie-card-container');
+  
+  movieCards.forEach(card => {
+    card.addEventListener('mouseenter', function() {
+      // Increase z-index for this card
+      this.style.zIndex = '10';
+    });
+    
+    card.addEventListener('mouseleave', function() {
+      // Reset z-index
+      this.style.zIndex = '1';
+    });
+  });
+});
 });
