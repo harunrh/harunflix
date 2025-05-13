@@ -285,8 +285,6 @@ include 'templates/header.php';
                             : 'assets/img/no-poster.jpg';
                         ?>
                         <img src="<?php echo $poster_url; ?>" alt="<?php echo htmlspecialchars($movie['movie_title']); ?>" onerror="this.src='assets/img/no-poster.jpg'">
-
-                           onerror="this.src='assets/img/no-poster.jpg'">
                       
                       <div class="movie-rating">
                         <?php echo number_format($movie['avg_rating'], 1); ?>
