@@ -331,397 +331,312 @@ try {
 include 'templates/header.php';
 ?>
 
-<!-- Search Section with Dynamic Background -->
-<div class="hero-banner">
-    <!-- Scrolling Poster Background -->
-    <div class="poster-scroll-container">
-        <div class="poster-scroll">
-            <div class="poster-row poster-row-1">
-                <?php 
-                // Get 7 random movies for first row
-                $random_posters_1 = array_slice($all_movies, 0, min(7, count($all_movies)));
-                foreach ($random_posters_1 as $movie): 
-                ?>
-                    <div class="poster" data-movie-id="<?php echo $movie['movie_id']; ?>">
-                        <?php 
-                        $poster_url = $movie['poster_path'] 
-                            ? TMDB_IMAGE_BASE_URL . $movie['poster_path'] 
-                            : 'assets/img/no-poster.jpg';
-                        ?>
-                        <img src="<?php echo $poster_url; ?>" alt="Movie Poster" onerror="this.src='assets/img/no-poster.jpg'">
-                    </div>
-                <?php endforeach; ?>
-                
-                <!-- Duplicate the posters to create a seamless loop -->
-                <?php foreach ($random_posters_1 as $movie): ?>
-                    <div class="poster" data-movie-id="<?php echo $movie['movie_id']; ?>">
-                        <?php 
-                        $poster_url = $movie['poster_path'] 
-                            ? TMDB_IMAGE_BASE_URL . $movie['poster_path'] 
-                            : 'assets/img/no-poster.jpg';
-                        ?>
-                        <img src="<?php echo $poster_url; ?>" alt="Movie Poster" onerror="this.src='assets/img/no-poster.jpg'">
+<div class="container mt-4">
+    <h1 class="mb-4">Movies</h1>
+    
+    <!-- New Releases Section -->
+    <?php if (!empty($new_releases)): ?>
+    <div class="content-row">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="h4"><i class="fas fa-film me-2"></i>New Releases</h2>
+            <div class="d-flex gap-2">
+                <button class="btn btn-sm btn-outline-primary view-all-btn" data-section="new-releases">
+                    See All
+                </button>
+            </div>
+        </div>
+        
+        <div class="position-relative">
+            <!-- Left Control Arrow -->
+            <button class="card-slider-control-prev d-none d-md-block" aria-label="Previous">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            
+            <!-- Card Slider -->
+            <div class="card-slider">
+                <?php foreach ($new_releases as $movie): ?>
+                    <div class="movie-card-container">
+                        <a href="review.php?id=<?php echo $movie['movie_id']; ?>" class="text-decoration-none">
+                            <div class="movie-card">
+                                <?php 
+                                $poster_url = $movie['poster_path'] 
+                                    ? TMDB_IMAGE_BASE_URL . $movie['poster_path'] 
+                                    : 'assets/img/no-poster.jpg';
+                                ?>
+                                <img src="<?php echo $poster_url; ?>" alt="<?php echo htmlspecialchars($movie['movie_title']); ?>" onerror="this.src='assets/img/no-poster.jpg'">
+                                
+                                <?php if (isset($movie['source']) && $movie['source'] == 'tmdb'): ?>
+                                    <div class="movie-rating">
+                                        <i class="fas fa-star me-1 small"></i><?php echo number_format($movie['avg_rating'], 1); ?>
+                                    </div>
+                                <?php else: ?>
+                                    <div class="movie-rating">
+                                        <?php echo number_format($movie['avg_rating'], 1); ?>
+                                    </div>
+                                <?php endif; ?>
+                                
+                                <div class="card-body">
+                                    <div class="movie-title"><?php echo $movie['movie_title']; ?></div>
+                                    <div class="d-flex justify-content-between">
+                                        <div class="movie-year">
+                                            <?php echo $movie['release_date'] ? date('Y', strtotime($movie['release_date'])) : 'N/A'; ?>
+                                        </div>
+                                        <div class="new-badge">
+                                            <span class="badge bg-danger">New</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
                     </div>
                 <?php endforeach; ?>
             </div>
             
-            <div class="poster-row poster-row-2">
-                <?php 
-                // Get next 7 movies for second row
-                $start_index = min(7, count($all_movies));
-                $random_posters_2 = array_slice($all_movies, $start_index, min(7, max(0, count($all_movies) - $start_index)));
-                foreach ($random_posters_2 as $movie): 
-                ?>
-                    <div class="poster" data-movie-id="<?php echo $movie['movie_id']; ?>">
-                        <?php 
-                        $poster_url = $movie['poster_path'] 
-                            ? TMDB_IMAGE_BASE_URL . $movie['poster_path'] 
-                            : 'assets/img/no-poster.jpg';
-                        ?>
-                        <img src="<?php echo $poster_url; ?>" alt="Movie Poster" onerror="this.src='assets/img/no-poster.jpg'">
-                    </div>
-                <?php endforeach; ?>
-                
-                <!-- Duplicate the posters to create a seamless loop -->
-                <?php foreach ($random_posters_2 as $movie): ?>
-                    <div class="poster" data-movie-id="<?php echo $movie['movie_id']; ?>">
-                        <?php 
-                        $poster_url = $movie['poster_path'] 
-                            ? TMDB_IMAGE_BASE_URL . $movie['poster_path'] 
-                            : 'assets/img/no-poster.jpg';
-                        ?>
-                        <img src="<?php echo $poster_url; ?>" alt="Movie Poster" onerror="this.src='assets/img/no-poster.jpg'">
-                    </div>
-                <?php endforeach; ?>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Overlay with Content -->
-    <div class="hero-overlay"></div>
-    
-    <div class="container position-relative">
-        <div class="hero-content text-center">
-            <h1 class="mb-3">Discover Movies</h1>
-            <div class="row justify-content-center">
-                <div class="col-md-8 position-relative">
-                    <div class="input-group input-group-lg">
-                        <input type="text" class="form-control" id="movie-search-hero" placeholder="Search for any movie...">
-                        <button class="btn btn-primary" type="button">
-                            <i class="fas fa-search"></i>
-                        </button>
-                    </div>
-                    <div id="search-results-hero" class="mt-2 text-start"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- New Releases Section -->
-<?php if (!empty($new_releases)): ?>
-<div class="content-row">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2 class="h4"><i class="fas fa-film me-2"></i>New Releases</h2>
-        <div class="d-flex gap-2">
-            <button class="btn btn-sm btn-outline-primary view-all-btn" data-section="new-releases">
-                See All
+            <!-- Right Control Arrow -->
+            <button class="card-slider-control-next d-none d-md-block" aria-label="Next">
+                <i class="fas fa-chevron-right"></i>
             </button>
-        </div>
-    </div>
-    
-    <div class="position-relative">
-        <!-- Left Control Arrow -->
-        <button class="card-slider-control-prev d-none d-md-block" aria-label="Previous">
-            <i class="fas fa-chevron-left"></i>
-        </button>
-        
-        <!-- Card Slider -->
-        <div class="card-slider">
-            <?php foreach ($new_releases as $movie): ?>
-                <div class="movie-card-container">
-                    <a href="review.php?id=<?php echo $movie['movie_id']; ?>" class="text-decoration-none">
-                        <div class="movie-card">
-                            <?php 
-                            $poster_url = $movie['poster_path'] 
-                                ? TMDB_IMAGE_BASE_URL . $movie['poster_path'] 
-                                : 'assets/img/no-poster.jpg';
-                            ?>
-                            <img src="<?php echo $poster_url; ?>" alt="<?php echo htmlspecialchars($movie['movie_title']); ?>" onerror="this.src='assets/img/no-poster.jpg'">
-                            
-                            <?php if (isset($movie['source']) && $movie['source'] == 'tmdb'): ?>
-                                <div class="movie-rating">
-                                    <i class="fas fa-star me-1 small"></i><?php echo number_format($movie['avg_rating'], 1); ?>
-                                </div>
-                            <?php else: ?>
-                                <div class="movie-rating">
-                                    <?php echo number_format($movie['avg_rating'], 1); ?>
-                                </div>
-                            <?php endif; ?>
-                            
-                            <div class="card-body">
-                                <div class="movie-title"><?php echo $movie['movie_title']; ?></div>
-                                <div class="d-flex justify-content-between">
-                                    <div class="movie-year">
-                                        <?php echo $movie['release_date'] ? date('Y', strtotime($movie['release_date'])) : 'N/A'; ?>
-                                    </div>
-                                    <div class="new-badge">
-                                        <span class="badge bg-danger">New</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            <?php endforeach; ?>
-        </div>
-        
-        <!-- Right Control Arrow -->
-        <button class="card-slider-control-next d-none d-md-block" aria-label="Next">
-            <i class="fas fa-chevron-right"></i>
-        </button>
-    </div>
-</div>
-<?php endif; ?>
-
-<!-- Top Rated Movies Section -->
-<?php if (!empty($top_movies)): ?>
-<div class="content-row">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2 class="h4"><i class="fas fa-trophy me-2"></i>Top Rated Movies</h2>
-        <div class="d-flex gap-2">
-            <button class="btn btn-sm btn-outline-primary view-all-btn" data-section="top-rated">
-                See All
-            </button>
-        </div>
-    </div>
-    
-    <div class="position-relative">
-        <!-- Left Control Arrow -->
-        <button class="card-slider-control-prev d-none d-md-block" aria-label="Previous">
-            <i class="fas fa-chevron-left"></i>
-        </button>
-        
-        <!-- Card Slider -->
-        <div class="card-slider">
-            <?php foreach ($top_movies as $movie): ?>
-                <div class="movie-card-container">
-                    <a href="review.php?id=<?php echo $movie['movie_id']; ?>" class="text-decoration-none">
-                        <div class="movie-card">
-                            <?php 
-                            $poster_url = $movie['poster_path'] 
-                                ? TMDB_IMAGE_BASE_URL . $movie['poster_path'] 
-                                : 'assets/img/no-poster.jpg';
-                            ?>
-                            <img src="<?php echo $poster_url; ?>" alt="<?php echo htmlspecialchars($movie['movie_title']); ?>" onerror="this.src='assets/img/no-poster.jpg'">
-                            
-                            <div class="movie-rating">
-                                <?php echo number_format($movie['avg_rating'], 1); ?>
-                            </div>
-                            
-                            <div class="card-body">
-                                <div class="movie-title"><?php echo $movie['movie_title']; ?></div>
-                                <div class="movie-year">
-                                    <?php echo $movie['release_date'] ? date('Y', strtotime($movie['release_date'])) : 'N/A'; ?>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            <?php endforeach; ?>
-        </div>
-        
-        <!-- Right Control Arrow -->
-        <button class="card-slider-control-next d-none d-md-block" aria-label="Next">
-            <i class="fas fa-chevron-right"></i>
-        </button>
-    </div>
-</div>
-<?php endif; ?>
-
-<!-- Most Popular Movies Section -->
-<?php if (!empty($popular_movies)): ?>
-<div class="content-row">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2 class="h4"><i class="fas fa-fire me-2"></i>Most Popular</h2>
-        <div class="d-flex gap-2">
-            <button class="btn btn-sm btn-outline-primary view-all-btn" data-section="most-popular">
-                See All
-            </button>
-        </div>
-    </div>
-    
-    <div class="position-relative">
-        <!-- Left Control Arrow -->
-        <button class="card-slider-control-prev d-none d-md-block" aria-label="Previous">
-            <i class="fas fa-chevron-left"></i>
-        </button>
-        
-        <!-- Card Slider -->
-        <div class="card-slider">
-            <?php foreach ($popular_movies as $movie): ?>
-                <div class="movie-card-container">
-                    <a href="review.php?id=<?php echo $movie['movie_id']; ?>" class="text-decoration-none">
-                        <div class="movie-card">
-                            <?php 
-                            $poster_url = $movie['poster_path'] 
-                                ? TMDB_IMAGE_BASE_URL . $movie['poster_path'] 
-                                : 'assets/img/no-poster.jpg';
-                            ?>
-                            <img src="<?php echo $poster_url; ?>" alt="<?php echo htmlspecialchars($movie['movie_title']); ?>" onerror="this.src='assets/img/no-poster.jpg'">
-                            
-                            <div class="movie-rating">
-                                <?php echo number_format($movie['avg_rating'], 1); ?>
-                            </div>
-                            
-                            <div class="card-body">
-                                <div class="movie-title"><?php echo $movie['movie_title']; ?></div>
-                                <div class="d-flex justify-content-between">
-                                    <div class="movie-year">
-                                        <?php echo $movie['release_date'] ? date('Y', strtotime($movie['release_date'])) : 'N/A'; ?>
-                                    </div>
-                                    <div>
-                                        <i class="fas fa-users me-1 small"></i>
-                                        <span class="small"><?php echo $movie['review_count']; ?></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            <?php endforeach; ?>
-        </div>
-        
-        <!-- Right Control Arrow -->
-        <button class="card-slider-control-next d-none d-md-block" aria-label="Next">
-            <i class="fas fa-chevron-right"></i>
-        </button>
-    </div>
-</div>
-<?php endif; ?>
-
-<!-- Recently Rated Movies Section -->
-<?php if (!empty($recent_movies)): ?>
-<div class="content-row">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2 class="h4"><i class="fas fa-clock me-2"></i>Recently Rated</h2>
-        <div class="d-flex gap-2">
-            <button class="btn btn-sm btn-outline-primary view-all-btn" data-section="recently-rated">
-                See All
-            </button>
-        </div>
-    </div>
-    
-    <div class="position-relative">
-        <!-- Left Control Arrow -->
-        <button class="card-slider-control-prev d-none d-md-block" aria-label="Previous">
-            <i class="fas fa-chevron-left"></i>
-        </button>
-        
-        <!-- Card Slider -->
-        <div class="card-slider">
-            <?php foreach ($recent_movies as $movie): ?>
-                <div class="movie-card-container">
-                    <a href="review.php?id=<?php echo $movie['movie_id']; ?>" class="text-decoration-none">
-                        <div class="movie-card">
-                            <?php 
-                            $poster_url = $movie['poster_path'] 
-                                ? TMDB_IMAGE_BASE_URL . $movie['poster_path'] 
-                                : 'assets/img/no-poster.jpg';
-                            ?>
-                            <img src="<?php echo $poster_url; ?>" alt="<?php echo htmlspecialchars($movie['movie_title']); ?>" onerror="this.src='assets/img/no-poster.jpg'">
-                            
-                            <div class="movie-rating">
-                                <?php echo number_format($movie['avg_rating'], 1); ?>
-                            </div>
-                            
-                            <div class="card-body">
-                                <div class="movie-title"><?php echo $movie['movie_title']; ?></div>
-                                <div class="movie-year">
-                                    <?php echo $movie['release_date'] ? date('Y', strtotime($movie['release_date'])) : 'N/A'; ?>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            <?php endforeach; ?>
-        </div>
-        
-        <!-- Right Control Arrow -->
-        <button class="card-slider-control-next d-none d-md-block" aria-label="Next">
-            <i class="fas fa-chevron-right"></i>
-        </button>
-    </div>
-</div>
-<?php endif; ?>
-
-<!-- Trending Movies Section -->
-<?php if (!empty($trending_movies)): ?>
-<div class="content-row">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2 class="h4"><i class="fas fa-chart-line me-2"></i>Trending This Week</h2>
-        <div class="d-flex gap-2">
-            <button class="btn btn-sm btn-outline-primary view-all-btn" data-section="trending">
-                See All
-            </button>
-        </div>
-    </div>
-    
-    <div class="position-relative">
-        <!-- Left Control Arrow -->
-        <button class="card-slider-control-prev d-none d-md-block" aria-label="Previous">
-            <i class="fas fa-chevron-left"></i>
-        </button>
-        
-        <!-- Card Slider -->
-        <div class="card-slider">
-            <?php foreach ($trending_movies as $movie): ?>
-                <div class="movie-card-container">
-                    <a href="review.php?id=<?php echo $movie['movie_id']; ?>" class="text-decoration-none">
-                        <div class="movie-card">
-                            <?php 
-                            $poster_url = $movie['poster_path'] 
-                                ? TMDB_IMAGE_BASE_URL . $movie['poster_path'] 
-                                : 'assets/img/no-poster.jpg';
-                            ?>
-                            <img src="<?php echo $poster_url; ?>" alt="<?php echo htmlspecialchars($movie['movie_title']); ?>" onerror="this.src='assets/img/no-poster.jpg'">
-                            
-                            <?php if (isset($movie['source']) && $movie['source'] == 'tmdb'): ?>
-                                <div class="movie-rating">
-                                    <i class="fas fa-star me-1 small"></i><?php echo number_format($movie['avg_rating'], 1); ?>
-                                </div>
-                            <?php else: ?>
-                                <div class="movie-rating">
-                                    <?php echo number_format($movie['avg_rating'], 1); ?>
-                                </div>
-                            <?php endif; ?>
-                            
-                            <div class="card-body">
-                                <div class="movie-title"><?php echo $movie['movie_title']; ?></div>
-                                <div class="d-flex justify-content-between">
-                                    <div class="movie-year">
-                                        <?php echo $movie['release_date'] ? date('Y', strtotime($movie['release_date'])) : 'N/A'; ?>
-                                    </div>
-                                    <div class="trending-badge">
-                                        <i class="fas fa-arrow-trend-up text-success"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            <?php endforeach; ?>
-        </div>
-        
-        <!-- Right Control Arrow -->
-    <!-- Right Control Arrow -->
-    <button class="card-slider-control-next d-none d-md-block" aria-label="Next">
-        <i class="fas fa-chevron-right"></i>
-    </button>
         </div>
     </div>
     <?php endif; ?>
-    
+
+    <!-- Top Rated Movies Section -->
+    <?php if (!empty($top_movies)): ?>
+    <div class="content-row">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="h4"><i class="fas fa-trophy me-2"></i>Top Rated Movies</h2>
+            <div class="d-flex gap-2">
+                <button class="btn btn-sm btn-outline-primary view-all-btn" data-section="top-rated">
+                    See All
+                </button>
+            </div>
+        </div>
+        
+        <div class="position-relative">
+            <!-- Left Control Arrow -->
+            <button class="card-slider-control-prev d-none d-md-block" aria-label="Previous">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            
+            <!-- Card Slider -->
+            <div class="card-slider">
+                <?php foreach ($top_movies as $movie): ?>
+                    <div class="movie-card-container">
+                        <a href="review.php?id=<?php echo $movie['movie_id']; ?>" class="text-decoration-none">
+                            <div class="movie-card">
+                                <?php 
+                                $poster_url = $movie['poster_path'] 
+                                    ? TMDB_IMAGE_BASE_URL . $movie['poster_path'] 
+                                    : 'assets/img/no-poster.jpg';
+                                ?>
+                                <img src="<?php echo $poster_url; ?>" alt="<?php echo htmlspecialchars($movie['movie_title']); ?>" onerror="this.src='assets/img/no-poster.jpg'">
+                                
+                                <div class="movie-rating">
+                                    <?php echo number_format($movie['avg_rating'], 1); ?>
+                                </div>
+                                
+                                <div class="card-body">
+                                    <div class="movie-title"><?php echo $movie['movie_title']; ?></div>
+                                    <div class="movie-year">
+                                        <?php echo $movie['release_date'] ? date('Y', strtotime($movie['release_date'])) : 'N/A'; ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+            
+            <!-- Right Control Arrow -->
+            <button class="card-slider-control-next d-none d-md-block" aria-label="Next">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+    <?php endif; ?>
+
+    <!-- Most Popular Movies Section -->
+    <?php if (!empty($popular_movies)): ?>
+    <div class="content-row">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="h4"><i class="fas fa-fire me-2"></i>Most Popular</h2>
+            <div class="d-flex gap-2">
+                <button class="btn btn-sm btn-outline-primary view-all-btn" data-section="most-popular">
+                    See All
+                </button>
+            </div>
+        </div>
+        
+        <div class="position-relative">
+            <!-- Left Control Arrow -->
+            <button class="card-slider-control-prev d-none d-md-block" aria-label="Previous">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            
+            <!-- Card Slider -->
+            <div class="card-slider">
+                <?php foreach ($popular_movies as $movie): ?>
+                    <div class="movie-card-container">
+                        <a href="review.php?id=<?php echo $movie['movie_id']; ?>" class="text-decoration-none">
+                            <div class="movie-card">
+                                <?php 
+                                $poster_url = $movie['poster_path'] 
+                                    ? TMDB_IMAGE_BASE_URL . $movie['poster_path'] 
+                                    : 'assets/img/no-poster.jpg';
+                                ?>
+                                <img src="<?php echo $poster_url; ?>" alt="<?php echo htmlspecialchars($movie['movie_title']); ?>" onerror="this.src='assets/img/no-poster.jpg'">
+                                
+                                <div class="movie-rating">
+                                    <?php echo number_format($movie['avg_rating'], 1); ?>
+                                </div>
+                                
+                                <div class="card-body">
+                                    <div class="movie-title"><?php echo $movie['movie_title']; ?></div>
+                                    <div class="d-flex justify-content-between">
+                                        <div class="movie-year">
+                                            <?php echo $movie['release_date'] ? date('Y', strtotime($movie['release_date'])) : 'N/A'; ?>
+                                        </div>
+                                        <div>
+                                            <i class="fas fa-users me-1 small"></i>
+                                            <span class="small"><?php echo $movie['review_count']; ?></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+            
+            <!-- Right Control Arrow -->
+            <button class="card-slider-control-next d-none d-md-block" aria-label="Next">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+    <?php endif; ?>
+
+    <!-- Recently Rated Movies Section -->
+    <?php if (!empty($recent_movies)): ?>
+    <div class="content-row">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="h4"><i class="fas fa-clock me-2"></i>Recently Rated</h2>
+            <div class="d-flex gap-2">
+                <button class="btn btn-sm btn-outline-primary view-all-btn" data-section="recently-rated">
+                    See All
+                </button>
+            </div>
+        </div>
+        
+        <div class="position-relative">
+            <!-- Left Control Arrow -->
+            <button class="card-slider-control-prev d-none d-md-block" aria-label="Previous">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            
+            <!-- Card Slider -->
+            <div class="card-slider">
+                <?php foreach ($recent_movies as $movie): ?>
+                    <div class="movie-card-container">
+                        <a href="review.php?id=<?php echo $movie['movie_id']; ?>" class="text-decoration-none">
+                            <div class="movie-card">
+                                <?php 
+                                $poster_url = $movie['poster_path'] 
+                                    ? TMDB_IMAGE_BASE_URL . $movie['poster_path'] 
+                                    : 'assets/img/no-poster.jpg';
+                                ?>
+                                <img src="<?php echo $poster_url; ?>" alt="<?php echo htmlspecialchars($movie['movie_title']); ?>" onerror="this.src='assets/img/no-poster.jpg'">
+                                
+                                <div class="movie-rating">
+                                    <?php echo number_format($movie['avg_rating'], 1); ?>
+                                </div>
+                                
+                                <div class="card-body">
+                                    <div class="movie-title"><?php echo $movie['movie_title']; ?></div>
+                                    <div class="movie-year">
+                                        <?php echo $movie['release_date'] ? date('Y', strtotime($movie['release_date'])) : 'N/A'; ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+            
+            <!-- Right Control Arrow -->
+            <button class="card-slider-control-next d-none d-md-block" aria-label="Next">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+    <?php endif; ?>
+
+    <!-- Trending Movies Section -->
+    <?php if (!empty($trending_movies)): ?>
+    <div class="content-row">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="h4"><i class="fas fa-chart-line me-2"></i>Trending This Week</h2>
+            <div class="d-flex gap-2">
+                <button class="btn btn-sm btn-outline-primary view-all-btn" data-section="trending">
+                    See All
+                </button>
+            </div>
+        </div>
+        
+        <div class="position-relative">
+            <!-- Left Control Arrow -->
+            <button class="card-slider-control-prev d-none d-md-block" aria-label="Previous">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            
+            <!-- Card Slider -->
+            <div class="card-slider">
+                <?php foreach ($trending_movies as $movie): ?>
+                    <div class="movie-card-container">
+                        <a href="review.php?id=<?php echo $movie['movie_id']; ?>" class="text-decoration-none">
+                            <div class="movie-card">
+                                <?php 
+                                $poster_url = $movie['poster_path'] 
+                                    ? TMDB_IMAGE_BASE_URL . $movie['poster_path'] 
+                                    : 'assets/img/no-poster.jpg';
+                                ?>
+                                <img src="<?php echo $poster_url; ?>" alt="<?php echo htmlspecialchars($movie['movie_title']); ?>" onerror="this.src='assets/img/no-poster.jpg'">
+                                
+                                <?php if (isset($movie['source']) && $movie['source'] == 'tmdb'): ?>
+                                    <div class="movie-rating">
+                                        <i class="fas fa-star me-1 small"></i><?php echo number_format($movie['avg_rating'], 1); ?>
+                                    </div>
+                                <?php else: ?>
+                                    <div class="movie-rating">
+                                        <?php echo number_format($movie['avg_rating'], 1); ?>
+                                    </div>
+                                <?php endif; ?>
+                                
+                                <div class="card-body">
+                                    <div class="movie-title"><?php echo $movie['movie_title']; ?></div>
+                                    <div class="d-flex justify-content-between">
+                                        <div class="movie-year">
+                                            <?php echo $movie['release_date'] ? date('Y', strtotime($movie['release_date'])) : 'N/A'; ?>
+                                        </div>
+                                        <div class="trending-badge">
+                                            <i class="fas fa-arrow-trend-up text-success"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+            
+            <!-- Right Control Arrow -->
+            <button class="card-slider-control-next d-none d-md-block" aria-label="Next">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+    <?php endif; ?>
+
     <!-- Expanded View Sections (initially hidden) -->
     <div id="section-expanded-view" class="d-none">
         <div class="content-row">
@@ -737,7 +652,7 @@ include 'templates/header.php';
             </div>
         </div>
     </div>
-    
+
     <!-- Write a Review CTA -->
     <div class="content-row">
         <div class="card">
@@ -751,74 +666,76 @@ include 'templates/header.php';
             </div>
         </div>
     </div>
-    
-    <!-- Search Modal -->
-    <div class="modal fade" id="searchModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Find a Movie to Review</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+
+<!-- Search Modal -->
+<div class="modal fade" id="searchModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Find a Movie to Review</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <input type="text" class="form-control form-control-lg" id="movie-search-modal" placeholder="Type movie name...">
                 </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <input type="text" class="form-control form-control-lg" id="movie-search-modal" placeholder="Type movie name...">
-                    </div>
-                    <div id="search-results-modal" class="mt-3"></div>
-                </div>
+                <div id="search-results-modal" class="mt-3"></div>
             </div>
         </div>
     </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    // Initialize sliders
+    $('.card-slider-control-prev').on('click', function() {
+        const slider = $(this).closest('.content-row').find('.card-slider');
+        slider.animate({
+            scrollLeft: '-=600'
+        }, 300);
+    });
     
-    <script>
-    $(document).ready(function() {
-        // Initialize sliders
-        $('.card-slider-control-prev').on('click', function() {
-            const slider = $(this).closest('.content-row').find('.card-slider');
-            slider.animate({
-                scrollLeft: '-=600'
-            }, 300);
-        });
+    $('.card-slider-control-next').on('click', function() {
+        const slider = $(this).closest('.content-row').find('.card-slider');
+        slider.animate({
+            scrollLeft: '+=600'
+        }, 300);
+    });
+    
+    // View All button functionality
+    $('.view-all-btn').on('click', function() {
+        const section = $(this).data('section');
         
-        $('.card-slider-control-next').on('click', function() {
-            const slider = $(this).closest('.content-row').find('.card-slider');
-            slider.animate({
-                scrollLeft: '+=600'
-            }, 300);
-        });
+        // Hide all content rows
+        $('.content-row').addClass('d-none');
         
-        // View All button functionality
-        $('.view-all-btn').on('click', function() {
-            const section = $(this).data('section');
-            
-            // Hide all content rows
-            $('.content-row').addClass('d-none');
-            
-            // Show expanded view
-            $('#section-expanded-view').removeClass('d-none');
-            
-            // Set title based on section
-            let title = "";
-            switch(section) {
-                case 'new-releases':
-                    title = '<i class="fas fa-film me-2"></i>New Releases';
-                    break;
-                case 'top-rated':
-                    title = '<i class="fas fa-trophy me-2"></i>Top Rated Movies';
-                    break;
-                case 'most-popular':
-                    title = '<i class="fas fa-fire me-2"></i>Most Popular Movies';
-                    break;
-                case 'recently-rated':
-                    title = '<i class="fas fa-clock me-2"></i>Recently Rated Movies';
-                    break;
-                case 'trending':
-                    title = '<i class="fas fa-chart-line me-2"></i>Trending This Week';
-                    break;
-            }
-            
-            $('.section-title').html(title);
-            
+        // Show expanded view
+        $('#section-expanded-view').removeClass('d-none');
+        
+        // Set title based on section
+        let title = "";
+        switch(section) {
+            case 'new-releases':
+                title = '<i class="fas fa-film me-2"></i>New Releases';
+                break;
+            case 'top-rated':
+                title = '<i class="fas fa-trophy me-2"></i>Top Rated Movies';
+                break;
+            case 'most-popular':
+                title = '<i class="fas fa-fire me-2"></i>Most Popular Movies';
+                break;
+            case 'recently-rated':
+                title = '<i class="fas fa-clock me-2"></i>Recently Rated Movies';
+                break;
+            case 'trending':
+                title = '<i class="fas fa-chart-line me-2"></i>Trending This Week';
+                break;
+        }
+        
+        $('.section-title').html(title);
+        
+
             // Clone movies from the corresponding section to the expanded view
             const sectionMovies = $(`[data-section="${section}"]`).closest('.content-row').find('.movie-card-container');
             const expandedContent = $('.section-content');
