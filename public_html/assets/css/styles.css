@@ -1214,3 +1214,455 @@ body.light-theme .card-slider-control-next:hover {
   object-fit: contain !important;
   padding: 20px;
 }
+
+/* Additional styles for the enhanced movies page */
+
+/* Section transition animations */
+.content-row {
+  transition: all 0.3s ease;
+}
+
+/* Section headers with colorful icons */
+.content-row h2 i.fa-trophy {
+  color: #FFD700; /* Gold */
+}
+
+.content-row h2 i.fa-clock {
+  color: #3498db; /* Blue */
+}
+
+.content-row h2 i.fa-fire {
+  color: #e74c3c; /* Red */
+}
+
+.content-row h2 i.fa-star {
+  color: #f39c12; /* Orange */
+}
+
+.content-row h2 i.fa-gem {
+  color: #9b59b6; /* Purple */
+}
+
+.content-row h2 i.fa-pen-fancy {
+  color: var(--primary-color);
+}
+
+/* Improved view all buttons */
+.view-all-btn {
+  transition: all 0.2s ease;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  padding: 4px 12px;
+}
+
+.view-all-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Return button styling */
+.return-btn {
+  transition: all 0.2s ease;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  padding: 4px 12px;
+}
+
+.return-btn:hover {
+  transform: translateX(-3px);
+}
+
+/* Expanded view animations */
+#section-expanded-view {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.section-content .col {
+  animation: scaleIn 0.3s ease;
+  animation-fill-mode: both;
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Apply sequential delay to each movie card for staggered animation */
+.section-content .col:nth-child(1) { animation-delay: 0.05s; }
+.section-content .col:nth-child(2) { animation-delay: 0.1s; }
+.section-content .col:nth-child(3) { animation-delay: 0.15s; }
+.section-content .col:nth-child(4) { animation-delay: 0.2s; }
+.section-content .col:nth-child(5) { animation-delay: 0.25s; }
+.section-content .col:nth-child(6) { animation-delay: 0.3s; }
+.section-content .col:nth-child(7) { animation-delay: 0.35s; }
+.section-content .col:nth-child(8) { animation-delay: 0.4s; }
+.section-content .col:nth-child(9) { animation-delay: 0.45s; }
+.section-content .col:nth-child(10) { animation-delay: 0.5s; }
+.section-content .col:nth-child(11) { animation-delay: 0.55s; }
+.section-content .col:nth-child(12) { animation-delay: 0.6s; }
+
+/* Enhanced movie cards hover effect */
+.section-content .movie-card-container:hover {
+  transform: translateY(-5px) scale(1.05);
+  transition: all 0.3s ease;
+}
+
+/* Badge for review count */
+.review-count-badge {
+  font-size: 0.75rem;
+  color: var(--gray-text);
+  display: flex;
+  align-items: center;
+}
+
+.review-count-badge i {
+  margin-right: 3px;
+  font-size: 0.7rem;
+}
+
+/* Enhanced CTA card */
+.content-row .card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Styling for the hero banner search */
+.hero-content .input-group {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.hero-content .input-group .form-control {
+  padding: 15px 20px;
+  font-size: 1.1rem;
+  border: none;
+}
+
+.hero-content .input-group .btn {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+/* Improved slider controls */
+.card-slider-control-prev,
+.card-slider-control-next {
+  width: 40px;
+  height: 40px;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.content-row:hover .card-slider-control-prev,
+.content-row:hover .card-slider-control-next {
+  opacity: 0.7;
+}
+
+/* Improved positioning for movie rating badge */
+.movie-rating {
+  top: 8px;
+  right: 8px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 35px;
+  padding: 4px 8px;
+}
+
+/* Light theme adaptations */
+body.light-theme .content-row h2 i {
+  /* Keep colorful icons in light mode */
+  color: inherit;
+  opacity: 0.9;
+}
+
+body.light-theme .movie-rating {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+body.light-theme #section-expanded-view {
+  background-color: rgba(245, 245, 241, 0.5);
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .hero-content h1 {
+    font-size: 2rem;
+  }
+  
+  .hero-content .input-group .form-control,
+  .hero-content .input-group .btn {
+    padding: 12px 15px;
+    font-size: 1rem;
+  }
+  
+  .section-content {
+    /* Make sure grid has proper spacing on mobile */
+    margin: 0 -8px;
+  }
+  
+  .section-content .col {
+    padding: 8px;
+  }
+  
+  /* Adjust animation timing on mobile for performance */
+  .section-content .col {
+    animation-duration: 0.2s;
+  }
+  
+  /* Smaller movie card on mobile */
+  .movie-card img {
+    height: 180px;
+  }
+}
+
+/* Additional styles for the enhanced movies page */
+
+/* Section transition animations */
+.content-row {
+  transition: all 0.3s ease;
+}
+
+/* Section headers with colorful icons */
+.content-row h2 i.fa-film {
+  color: #2ecc71; /* Green for New Releases */
+}
+
+.content-row h2 i.fa-trophy {
+  color: #FFD700; /* Gold for Top Rated */
+}
+
+.content-row h2 i.fa-fire {
+  color: #e74c3c; /* Red for Most Popular */
+}
+
+.content-row h2 i.fa-clock {
+  color: #3498db; /* Blue for Recently Rated */
+}
+
+.content-row h2 i.fa-chart-line {
+  color: #1abc9c; /* Turquoise for Trending */
+}
+
+.content-row h2 i.fa-pen-fancy {
+  color: var(--primary-color);
+}
+
+/* Improved view all buttons */
+.view-all-btn {
+  transition: all 0.2s ease;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  padding: 4px 12px;
+}
+
+.view-all-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Return button styling */
+.return-btn {
+  transition: all 0.2s ease;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  padding: 4px 12px;
+}
+
+.return-btn:hover {
+  transform: translateX(-3px);
+}
+
+/* Expanded view animations */
+#section-expanded-view {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.section-content .col {
+  animation: scaleIn 0.3s ease;
+  animation-fill-mode: both;
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Apply sequential delay to each movie card for staggered animation */
+.section-content .col:nth-child(1) { animation-delay: 0.05s; }
+.section-content .col:nth-child(2) { animation-delay: 0.1s; }
+.section-content .col:nth-child(3) { animation-delay: 0.15s; }
+.section-content .col:nth-child(4) { animation-delay: 0.2s; }
+.section-content .col:nth-child(5) { animation-delay: 0.25s; }
+.section-content .col:nth-child(6) { animation-delay: 0.3s; }
+.section-content .col:nth-child(7) { animation-delay: 0.35s; }
+.section-content .col:nth-child(8) { animation-delay: 0.4s; }
+.section-content .col:nth-child(9) { animation-delay: 0.45s; }
+.section-content .col:nth-child(10) { animation-delay: 0.5s; }
+.section-content .col:nth-child(11) { animation-delay: 0.55s; }
+.section-content .col:nth-child(12) { animation-delay: 0.6s; }
+
+/* Enhanced movie cards hover effect */
+.section-content .movie-card-container:hover {
+  transform: translateY(-5px) scale(1.05);
+  transition: all 0.3s ease;
+}
+
+/* New badge for recently released movies */
+.new-badge {
+  font-size: 0.7rem;
+}
+
+/* Trending icon styling */
+.trending-badge {
+  color: #2ecc71;
+  font-size: 0.8rem;
+}
+
+/* TMDB rating badge styling */
+.movie-rating i.fa-star {
+  font-size: 0.7rem;
+  margin-right: 2px;
+}
+
+/* Add an indicator for external ratings */
+.movie-card .movie-rating:has(i.fa-star) {
+  display: flex;
+  align-items: center;
+  background-color: #444;
+}
+
+/* Light theme variant */
+body.light-theme .movie-card .movie-rating:has(i.fa-star) {
+  background-color: #aaa;
+}
+
+/* Enhanced CTA card */
+.content-row .card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Styling for the hero banner search */
+.hero-content .input-group {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.hero-content .input-group .form-control {
+  padding: 15px 20px;
+  font-size: 1.1rem;
+  border: none;
+}
+
+.hero-content .input-group .btn {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+/* Improved slider controls */
+.card-slider-control-prev,
+.card-slider-control-next {
+  width: 40px;
+  height: 40px;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.content-row:hover .card-slider-control-prev,
+.content-row:hover .card-slider-control-next {
+  opacity: 0.7;
+}
+
+/* Improved positioning for movie rating badge */
+.movie-rating {
+  top: 8px;
+  right: 8px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 35px;
+  padding: 4px 8px;
+}
+
+/* Light theme adaptations */
+body.light-theme .content-row h2 i {
+  /* Keep colorful icons in light mode */
+  color: inherit;
+  opacity: 0.9;
+}
+
+body.light-theme .movie-rating {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+body.light-theme #section-expanded-view {
+  background-color: rgba(245, 245, 241, 0.5);
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .hero-content h1 {
+    font-size: 2rem;
+  }
+  
+  .hero-content .input-group .form-control,
+  .hero-content .input-group .btn {
+    padding: 12px 15px;
+    font-size: 1rem;
+  }
+  
+  .section-content {
+    /* Make sure grid has proper spacing on mobile */
+    margin: 0 -8px;
+  }
+  
+  .section-content .col {
+    padding: 8px;
+  }
+  
+  /* Adjust animation timing on mobile for performance */
+  .section-content .col {
+    animation-duration: 0.2s;
+  }
+  
+  /* Smaller movie card on mobile */
+  .movie-card img {
+    height: 180px;
+  }
+}
