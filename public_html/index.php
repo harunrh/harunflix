@@ -117,6 +117,8 @@ function get_top_rated_movies($limit = 10) {
     return $movies;
 }
 
+
+
 // Function to get most active users
 function get_most_active_users($limit = 5) {
     global $conn;
@@ -265,31 +267,47 @@ include 'templates/header.php';
         <a href="movies.php" class="btn btn-outline-primary btn-sm">See All</a>
     </div>
     
-    <div class="movies-list">
-        <?php foreach ($top_movies as $movie): ?>
-            <a href="review.php?id=<?php echo $movie['movie_id']; ?>" class="text-decoration-none">
-                <div class="movie-list-item">
-                    <?php 
-                    $poster_url = $movie['poster_path'] 
-                        ? TMDB_IMAGE_BASE_URL . $movie['poster_path'] 
-                        : 'assets/img/no-poster.jpg';
-                    ?>
-                    <img src="<?php echo $poster_url; ?>" alt="<?php echo $movie['movie_title']; ?>" 
-                         onerror="this.src='assets/img/no-poster.jpg'">
-                    
-                    <div class="movie-info">
-                        <div class="d-flex justify-content-between">
-                            <h5 class="movie-title mb-0"><?php echo $movie['movie_title']; ?></h5>
-                            <span class="rating-badge"><?php echo number_format($movie['avg_rating'], 1); ?></span>
+    <div class="position-relative">
+        <!-- Left Control Arrow -->
+        <button class="card-slider-control-prev d-none d-md-block" aria-label="Previous">
+            <i class="fas fa-chevron-left fa-2x"></i>
+        </button>
+        
+        <!-- Card Slider -->
+        <div class="card-slider">
+            <?php foreach ($top_movies as $movie): ?>
+                <div class="movie-card-container">
+                  <a href="review.php?id=<?php echo $movie['movie_id']; ?>" class="text-decoration-none">
+                    <div class="movie-card">
+                        <?php 
+                        $poster_url = !empty($movie['poster_path']) 
+                            ? TMDB_IMAGE_BASE_URL . $movie['poster_path'] 
+                            : 'assets/img/no-poster.jpg';
+                        ?>
+                        <img src="<?php echo $poster_url; ?>" alt="<?php echo htmlspecialchars($movie['movie_title']); ?>" onerror="this.src='assets/img/no-poster.jpg'">
+
+                           onerror="this.src='assets/img/no-poster.jpg'">
+                      
+                      <div class="movie-rating">
+                        <?php echo number_format($movie['avg_rating'], 1); ?>
+                      </div>
+                      
+                      <div class="card-body">
+                        <div class="movie-title"><?php echo $movie['movie_title']; ?></div>
+                        <div class="movie-year">
+                          <?php echo $movie['release_date'] ? date('Y', strtotime($movie['release_date'])) : 'N/A'; ?>
                         </div>
-                        <p class="small mb-0 text-muted">
-                            <?php echo $movie['release_date'] ? date('Y', strtotime($movie['release_date'])) : 'N/A'; ?> • 
-                            <?php echo $movie['review_count']; ?> reviews
-                        </p>
+                      </div>
                     </div>
+                  </a>
                 </div>
-            </a>
-        <?php endforeach; ?>
+            <?php endforeach; ?>
+        </div>
+        
+        <!-- Right Control Arrow -->
+        <button class="card-slider-control-next d-none d-md-block" aria-label="Next">
+            <i class="fas fa-chevron-right fa-2x"></i>
+        </button>
     </div>
 </div>
 
@@ -443,45 +461,57 @@ include 'templates/header.php';
     </div>
 </div>
 
-<!-- Recent Reviews Section - List Style -->
+<!-- Recent Reviews Section - Netflix-Style Carousel -->
 <div class="content-row">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2 class="h4"><i class="fas fa-star me-2"></i>Recent Reviews</h2>
     </div>
     
-    <div class="movies-list">
-        <?php foreach ($recent_reviews as $review): ?>
-            <a href="review.php?id=<?php echo $review['movie_id']; ?>" class="text-decoration-none">
-                <div class="movie-list-item">
-                    <?php 
-                    $poster_url = $review['poster_path'] 
-                        ? TMDB_IMAGE_BASE_URL . $review['poster_path'] 
-                        : 'assets/img/no-poster.jpg';
-                    ?>
-                    <img src="<?php echo $poster_url; ?>" alt="<?php echo $review['movie_title']; ?>" onerror="this.src='assets/img/no-poster.jpg'">
-                    
-                    <div class="movie-info">
-                        <div class="d-flex justify-content-between">
-                            <h5 class="movie-title mb-0"><?php echo $review['movie_title']; ?></h5>
-                            <span class="rating-badge"><?php echo number_format($review['rating'], 1); ?></span>
-                        </div>
-                        <p class="small mb-1 text-muted">
-                            <?php echo $review['release_date'] ? date('Y', strtotime($review['release_date'])) : 'N/A'; ?> • 
-                            <?php echo $review['username']; ?>
-                        </p>
-                        <p class="small mb-0 text-light">
+    <div class="position-relative">
+        <!-- Left Control Arrow -->
+        <button class="card-slider-control-prev d-none d-md-block" aria-label="Previous">
+            <i class="fas fa-chevron-left fa-2x"></i>
+        </button>
+        
+        <!-- Card Slider -->
+        <div class="card-slider">
+            <?php foreach ($recent_reviews as $review): ?>
+                <div class="movie-card-container">
+                    <a href="review.php?id=<?php echo $review['movie_id']; ?>" class="text-decoration-none">
+                        <div class="movie-card">
                             <?php 
-                            echo !empty($review['review_text']) 
-                                ? (strlen($review['review_text']) > 100 
-                                    ? substr($review['review_text'], 0, 100) . '...' 
-                                    : $review['review_text']) 
-                                : '<em class="text-muted">No written review</em>'; 
+                            $poster_url = $review['poster_path'] 
+                                ? TMDB_IMAGE_BASE_URL . $review['poster_path'] 
+                                : 'assets/img/no-poster.jpg';
                             ?>
-                        </p>
-                    </div>
+                            <img src="<?php echo $poster_url; ?>" alt="<?php echo $review['movie_title']; ?>" 
+                                 onerror="this.src='assets/img/no-poster.jpg'">
+                            
+                            <div class="movie-rating">
+                                <?php echo number_format($review['rating'], 1); ?>
+                            </div>
+                            
+                            <div class="card-body">
+                                <div class="movie-title"><?php echo $review['movie_title']; ?></div>
+                                <div class="d-flex justify-content-between">
+                                    <div class="movie-year">
+                                        <?php echo $review['release_date'] ? date('Y', strtotime($review['release_date'])) : 'N/A'; ?>
+                                    </div>
+                                    <div class="movie-username small">
+                                        by <?php echo $review['username']; ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
                 </div>
-            </a>
-        <?php endforeach; ?>
+            <?php endforeach; ?>
+        </div>
+        
+        <!-- Right Control Arrow -->
+        <button class="card-slider-control-next d-none d-md-block" aria-label="Next">
+            <i class="fas fa-chevron-right fa-2x"></i>
+        </button>
     </div>
 </div>
 
