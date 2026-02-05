@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('watchlist', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->integer('movie_id');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');            $table->integer('movie_id');
             $table->string('movie_title');
             $table->timestamp('added_date')->useCurrent();
             $table->timestamps();

@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('reviews', function (Blueprint $table) {
             $table->id('review_id');
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->integer('movie_id');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');            $table->integer('movie_id');
             $table->string('movie_title');
             $table->decimal('rating', 3, 1);
             $table->text('review_text')->nullable();

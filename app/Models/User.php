@@ -18,9 +18,10 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
-        'email',
-        'password',
+    'username',
+    'email',
+    'password',
+    'profile_picture',
     ];
 
     /**
@@ -44,5 +45,20 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, 'user_id');
+    }
+
+    public function watchlist()
+    {
+        return $this->hasMany(Watchlist::class, 'user_id');
+    }
+
+    public function watchedMovies()
+    {
+        return $this->hasMany(WatchedMovie::class, 'user_id');
     }
 }

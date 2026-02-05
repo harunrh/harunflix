@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('watched_movies', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->integer('movie_id');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');            $table->integer('movie_id');
             $table->string('movie_title');
             $table->date('watched_date')->nullable();
             $table->integer('runtime')->nullable();
