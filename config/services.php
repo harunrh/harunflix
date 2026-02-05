@@ -34,5 +34,10 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
-
+    
+    'tmdb' => [
+        'api_key' => env('TMDB_API_KEY'),
+        'base_url' => env('TMDB_API_URL'),
+        'image_base_url' => env('TMDB_IMAGE_BASE_URL'),
+    ],
 ];
