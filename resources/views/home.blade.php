@@ -6,13 +6,15 @@
     <div class="row g-3">
         @foreach($popularMovies as $movie)
         <div class="col-6 col-md-3 col-lg-2">
-            <div class="movie-card">
-                <img src="https://image.tmdb.org/t/p/w500{{ $movie['poster_path'] }}" 
-                     class="img-fluid rounded" 
-                     alt="{{ $movie['title'] }}">
-                <h6 class="mt-2">{{ $movie['title'] }}</h6>
-                <small class="text-muted">{{ substr($movie['release_date'] ?? 'N/A', 0, 4) }}</small>
-            </div>
+            <a href="/movie/{{ $movie['id'] }}" class="text-decoration-none text-white">
+                <div class="movie-card">
+                    <img src="https://image.tmdb.org/t/p/w500{{ $movie['poster_path'] }}" 
+                        class="img-fluid rounded" 
+                        alt="{{ $movie['title'] }}">
+                    <h6 class="mt-2">{{ $movie['title'] }}</h6>
+                    <small class="text-muted">{{ substr($movie['release_date'] ?? 'N/A', 0, 4) }}</small>
+                </div>
+            </a>
         </div>
         @endforeach
     </div>
@@ -23,13 +25,15 @@
     <div class="row g-3">
         @foreach($trendingMovies as $movie)
         <div class="col-6 col-md-3 col-lg-2">
-            <div class="movie-card">
-                <img src="https://image.tmdb.org/t/p/w500{{ $movie['poster_path'] }}" 
-                     class="img-fluid rounded" 
-                     alt="{{ $movie['title'] }}">
-                <h6 class="mt-2">{{ $movie['title'] }}</h6>
-                <small class="text-muted">{{ substr($movie['release_date'] ?? 'N/A', 0, 4) }}</small>
-            </div>
+            <a href="/movie/{{ $movie['id'] }}" class="text-decoration-none text-white">
+                <div class="movie-card">
+                    <img src="https://image.tmdb.org/t/p/w500{{ $movie['poster_path'] }}" 
+                        class="img-fluid rounded" 
+                        alt="{{ $movie['title'] }}">
+                    <h6 class="mt-2">{{ $movie['title'] }}</h6>
+                    <small class="text-muted">{{ substr($movie['release_date'] ?? 'N/A', 0, 4) }}</small>
+                </div>
+            </a>
         </div>
         @endforeach
     </div>
