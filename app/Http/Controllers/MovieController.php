@@ -15,6 +15,7 @@ class MovieController extends Controller
         $this->tmdb = $tmdb;
     }
 
+
     public function show($id)
     {
         $movie = $this->tmdb->getMovieDetails($id);
@@ -29,4 +30,17 @@ class MovieController extends Controller
             'reviews' => $reviews
         ]);
     }
+
+
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+        $movies = $this->tmdb->searchMovies($query);
+
+        return view('movies.search', [
+            'movies' => $movies,
+            'query' => $query
+        ]);
+    }
+
 }

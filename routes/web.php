@@ -15,3 +15,4 @@ Route::post('/review', [ReviewController::class, 'store'])->middleware('auth')->
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/movie/{id}', [MovieController::class, 'show'])->name('movie.show');
+Route::get('/search', [MovieController::class, 'search'])->name('movie.search');

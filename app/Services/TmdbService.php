@@ -24,7 +24,7 @@ class TmdbService
             'query' => $query
         ]);
 
-        return $response->json();
+        return $response->json()['results'] ?? [];
     }
 
     public function getMovieDetails($movieId)

@@ -24,6 +24,10 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
+                <form action="{{ route('movie.search') }}" method="GET" class="d-flex mx-auto my-2 my-lg-0" style="width: 100%; max-width: 400px;">
+                    <input type="text" name="query" class="form-control me-2" placeholder="Search movies..." required>
+                    <button type="submit" class="btn btn-danger">Search</button>
+                </form>
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="/">Home</a>
