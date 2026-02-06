@@ -30,40 +30,58 @@
         </p>
         @endif
 
-        @auth
-        <button class="btn btn-danger mt-3" data-bs-toggle="modal" data-bs-target="#reviewModal">
-            <i class="fas fa-star"></i> Write a Review
-        </button>
-        @else
-        <a href="/login" class="btn btn-danger mt-3">Login to Review</a>
-        @endauth
+
     </div>
 </div>
 
-<div class="mt-5">
-    <h3>Reviews ({{ $reviews->count() }})</h3>
-    
-    @if($reviews->count() > 0)
-        @foreach($reviews as $review)
-        <div class="card mb-3">
-            <div class="card-body">
-                <div class="d-flex justify-content-between">
-                    <h5>{{ $review->user->username }}</h5>
-                    <span class="badge bg-danger">{{ $review->rating }}/10</span>
-                </div>
-                <p class="mt-2">{{ $review->review_text }}</p>
-                <small class="text-muted">{{ $review->created_at->diffForHumans() }}</small>
-            </div>
-        </div>
-        @endforeach
+@auth
+<div class="mb-4">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#reviewModal">
+        Write a Review
+    </button>
+
+    @if($inWatchlist)
+        <form action="{{ route('watchlist.remove', $movie['id']) }}" method="POST" class="d-inline">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="btn btn-warning">
+                <i class="fas fa-bookmark"></i> Remove from Watchlist
+            </button>
+        </form>
     @else
-        <div class="card">
-            <div class="card-body text-center">
-                <p>No reviews yet. Be the first to review!</p>
-            </div>
-        </div>
+        <form action="{{ route('watchlist.add') }}" method="POST" class="d-inline">
+            @csrf
+            <input type="hidden" name="movie_id" value="{{ $movie['id'] }}">
+            <input type="hidden" name="movie_title" value="{{ $movie['title'] }}">
+            <button type="submit" class="btn btn-outline-warning">
+                <i class="far fa-bookmark"></i> Add to Watchlist
+            </button>
+        </form>
+    @endif
+
+    @if($isWatched)
+        <form action="{{ route('watched.remove', $movie['id']) }}" method="POST" class="d-inline">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="btn btn-success">
+                <i class="fas fa-check-circle"></i> Watched
+            </button>
+        </form>
+    @else
+        <form action="{{ route('watched.add') }}" method="POST" class="d-inline">
+            @csrf
+            <input type="hidden" name="movie_id" value="{{ $movie['id'] }}">
+            <input type="hidden" name="movie_title" value="{{ $movie['title'] }}">
+            <input type="hidden" name="runtime" value="{{ $movie['runtime'] ?? null }}">
+            <button type="submit" class="btn btn-outline-success">
+                <i class="far fa-check-circle"></i> Mark as Watched
+            </button>
+        </form>
     @endif
 </div>
+@else
+<p>Please <a href="/login">login</a> to write reviews and manage your watchlist.</p>
+@endauth
 
 <!-- Review Modal -->
 @auth
@@ -99,4 +117,23 @@
     </div>
 </div>
 @endauth
+
+<!-- Reviews Section -->
+<div class="mt-5">
+    <h3 class="mb-4">Reviews</h3>
+    @if($reviews->count() > 0)
+        @foreach($reviews as $review)
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5>{{ $review->user->username }}</h5>
+                <p><strong>Rating:</strong> {{ $review->rating }}/10</p>
+                <p>{{ $review->review_text }}</p>
+                <small class="text-muted">{{ $review->created_at->diffForHumans() }}</small>
+            </div>
+        </div>
+        @endforeach
+    @else
+        <p class="text-muted">No reviews yet. Be the first to review this movie!</p>
+    @endif
+</div>
 @endsection
