@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Services\TmdbService;
-use App\Models\Review;
+use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
@@ -17,17 +16,25 @@ class HomeController extends Controller
 
     public function index()
     {
-        $popularMovies = $this->tmdb->getPopularMovies();
-        $trendingMovies = $this->tmdb->getTrendingMovies();
+        // Get movies from TMDB
+        $topRatedMovies = $this->tmdb->getTopRatedMovies(1);
+        $popularMovies = $this->tmdb->getPopularMovies(1);
+        $trendingMovies = $this->tmdb->getTrendingMovies('week');
         
-        $recentReviews = Review::with('user')
+        // Get random posters for hero banner
+        $heroPosters = $this->tmdb->getRandomPosters(14);
+
+        // Get reviews from database (if any)
+        $recentReviews = \App\Models\Review::with('user')
             ->orderBy('created_at', 'desc')
             ->limit(6)
             ->get();
 
         return view('home', [
+            'topRatedMovies' => $topRatedMovies['results'] ?? [],
             'popularMovies' => $popularMovies['results'] ?? [],
             'trendingMovies' => $trendingMovies['results'] ?? [],
+            'heroPosters' => $heroPosters,
             'recentReviews' => $recentReviews
         ]);
     }

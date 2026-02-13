@@ -7,42 +7,33 @@
     <div class="poster-scroll-container">
         <div class="poster-scroll">
             <div class="poster-row poster-row-1">
-                <!-- These would be dynamic from your database -->
-                <div class="poster"><img src="https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg" alt="Movie"></div>
-                <div class="poster"><img src="https://image.tmdb.org/t/p/w500/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg" alt="Movie"></div>
-                <div class="poster"><img src="https://image.tmdb.org/t/p/w500/cinER0ESG0eJ49kXlExM0MEWGxW.jpg" alt="Movie"></div>
-                <div class="poster"><img src="https://image.tmdb.org/t/p/w500/7fn624j5lj3xTme2SgiLCeuedmO.jpg" alt="Movie"></div>
-                <div class="poster"><img src="https://image.tmdb.org/t/p/w500/xvzxqKWLY8pH8dT0TZ0qLvE9Cv9.jpg" alt="Movie"></div>
-                <div class="poster"><img src="https://image.tmdb.org/t/p/w500/gKkl37BQuKTanygYQG1pyYgLVgf.jpg" alt="Movie"></div>
-                <div class="poster"><img src="https://image.tmdb.org/t/p/w500/kJwRqSzHzrdpvOMFalHQZbb2EJI.jpg" alt="Movie"></div>
+                @foreach(array_slice($heroPosters, 0, 7) as $poster)
+                <div class="poster">
+                    <img src="https://image.tmdb.org/t/p/w500{{ $poster }}" alt="Movie Poster">
+                </div>
+                @endforeach
                 
                 <!-- Duplicate for seamless loop -->
-                <div class="poster"><img src="https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg" alt="Movie"></div>
-                <div class="poster"><img src="https://image.tmdb.org/t/p/w500/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg" alt="Movie"></div>
-                <div class="poster"><img src="https://image.tmdb.org/t/p/w500/cinER0ESG0eJ49kXlExM0MEWGxW.jpg" alt="Movie"></div>
-                <div class="poster"><img src="https://image.tmdb.org/t/p/w500/7fn624j5lj3xTme2SgiLCeuedmO.jpg" alt="Movie"></div>
-                <div class="poster"><img src="https://image.tmdb.org/t/p/w500/xvzxqKWLY8pH8dT0TZ0qLvE9Cv9.jpg" alt="Movie"></div>
-                <div class="poster"><img src="https://image.tmdb.org/t/p/w500/gKkl37BQuKTanygYQG1pyYgLVgf.jpg" alt="Movie"></div>
-                <div class="poster"><img src="https://image.tmdb.org/t/p/w500/kJwRqSzHzrdpvOMFalHQZbb2EJI.jpg" alt="Movie"></div>
+                @foreach(array_slice($heroPosters, 0, 7) as $poster)
+                <div class="poster">
+                    <img src="https://image.tmdb.org/t/p/w500{{ $poster }}" alt="Movie Poster">
+                </div>
+                @endforeach
             </div>
             
             <div class="poster-row poster-row-2">
-                <div class="poster"><img src="https://image.tmdb.org/t/p/w500/9SSEUrSqhljBMzRe4aBTh17rUaC.jpg" alt="Movie"></div>
-                <div class="poster"><img src="https://image.tmdb.org/t/p/w500/yDHYTfA3R0jFYba16jBB1ef8oIt.jpg" alt="Movie"></div>
-                <div class="poster"><img src="https://image.tmdb.org/t/p/w500/aosm8NMQ3UyoBVpSxyimorCQykC.jpg" alt="Movie"></div>
-                <div class="poster"><img src="https://image.tmdb.org/t/p/w500/oGythE98MYleE6mZlGs5oBGkux1.jpg" alt="Movie"></div>
-                <div class="poster"><img src="https://image.tmdb.org/t/p/w500/1E5baAaEse26fej7uHcjOgEE2t2.jpg" alt="Movie"></div>
-                <div class="poster"><img src="https://image.tmdb.org/t/p/w500/vZloFAK7NmvMGKE7VkF5UHaz0I.jpg" alt="Movie"></div>
-                <div class="poster"><img src="https://image.tmdb.org/t/p/w500/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg" alt="Movie"></div>
+                @foreach(array_slice($heroPosters, 7, 7) as $poster)
+                <div class="poster">
+                    <img src="https://image.tmdb.org/t/p/w500{{ $poster }}" alt="Movie Poster">
+                </div>
+                @endforeach
                 
-                <!-- Duplicate -->
-                <div class="poster"><img src="https://image.tmdb.org/t/p/w500/9SSEUrSqhljBMzRe4aBTh17rUaC.jpg" alt="Movie"></div>
-                <div class="poster"><img src="https://image.tmdb.org/t/p/w500/yDHYTfA3R0jFYba16jBB1ef8oIt.jpg" alt="Movie"></div>
-                <div class="poster"><img src="https://image.tmdb.org/t/p/w500/aosm8NMQ3UyoBVpSxyimorCQykC.jpg" alt="Movie"></div>
-                <div class="poster"><img src="https://image.tmdb.org/t/p/w500/oGythE98MYleE6mZlGs5oBGkux1.jpg" alt="Movie"></div>
-                <div class="poster"><img src="https://image.tmdb.org/t/p/w500/1E5baAaEse26fej7uHcjOgEE2t2.jpg" alt="Movie"></div>
-                <div class="poster"><img src="https://image.tmdb.org/t/p/w500/vZloFAK7NmvMGKE7VkF5UHaz0I.jpg" alt="Movie"></div>
-                <div class="poster"><img src="https://image.tmdb.org/t/p/w500/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg" alt="Movie"></div>
+                <!-- Duplicate for seamless loop -->
+                @foreach(array_slice($heroPosters, 7, 7) as $poster)
+                <div class="poster">
+                    <img src="https://image.tmdb.org/t/p/w500{{ $poster }}" alt="Movie Poster">
+                </div>
+                @endforeach
             </div>
         </div>
     </div>
@@ -57,7 +48,7 @@
                 <div class="col-md-8">
                     <form action="{{ route('movie.search') }}" method="GET">
                         <div class="input-group input-group-lg">
-                            <input type="text" class="form-control" name="query" placeholder="Search movies...">
+                            <input type="text" class="form-control" name="query" placeholder="Search movies..." required>
                             <button class="btn btn-primary" type="submit">
                                 <i class="fas fa-search"></i>
                             </button>
@@ -73,7 +64,6 @@
 <div class="content-row">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2 class="h4"><i class="fas fa-trophy me-2"></i>Top Rated Movies</h2>
-        <a href="#" class="btn btn-outline-primary btn-sm">See All</a>
     </div>
     
     <div class="position-relative">
@@ -84,21 +74,28 @@
         
         <!-- Card Slider -->
         <div class="card-slider">
-            <!-- Example movie cards - make these dynamic -->
-            @for($i = 0; $i < 10; $i++)
+            @foreach($topRatedMovies as $movie)
             <div class="movie-card-container">
-                <a href="#" class="text-decoration-none">
+                <a href="{{ route('movie.show', $movie['id']) }}" class="text-decoration-none">
                     <div class="movie-card">
-                        <img src="https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg" alt="Movie Title">
-                        <div class="movie-rating">8.5</div>
+                        <img src="https://image.tmdb.org/t/p/w500{{ $movie['poster_path'] }}" 
+                             alt="{{ $movie['title'] }}"
+                             onerror="this.src='{{ asset('images/no-poster.jpg') }}'">
+                        
+                        <div class="movie-rating">
+                            {{ number_format($movie['vote_average'], 1) }}
+                        </div>
+                        
                         <div class="card-body">
-                            <div class="movie-title">The Shawshank Redemption</div>
-                            <div class="movie-year">1994</div>
+                            <div class="movie-title">{{ $movie['title'] }}</div>
+                            <div class="movie-year">
+                                {{ isset($movie['release_date']) ? date('Y', strtotime($movie['release_date'])) : 'N/A' }}
+                            </div>
                         </div>
                     </div>
                 </a>
             </div>
-            @endfor
+            @endforeach
         </div>
         
         <!-- Right Control Arrow -->
@@ -108,7 +105,91 @@
     </div>
 </div>
 
-<!-- Recent Activity Section -->
+<!-- Popular Movies Section -->
+<div class="content-row">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="h4"><i class="fas fa-fire me-2"></i>Popular Movies</h2>
+    </div>
+    
+    <div class="position-relative">
+        <button class="card-slider-control-prev d-none d-md-block" aria-label="Previous">
+            <i class="fas fa-chevron-left fa-2x"></i>
+        </button>
+        
+        <div class="card-slider">
+            @foreach($popularMovies as $movie)
+            <div class="movie-card-container">
+                <a href="{{ route('movie.show', $movie['id']) }}" class="text-decoration-none">
+                    <div class="movie-card">
+                        <img src="https://image.tmdb.org/t/p/w500{{ $movie['poster_path'] }}" 
+                             alt="{{ $movie['title'] }}"
+                             onerror="this.src='{{ asset('images/no-poster.jpg') }}'">
+                        
+                        <div class="movie-rating">
+                            {{ number_format($movie['vote_average'], 1) }}
+                        </div>
+                        
+                        <div class="card-body">
+                            <div class="movie-title">{{ $movie['title'] }}</div>
+                            <div class="movie-year">
+                                {{ isset($movie['release_date']) ? date('Y', strtotime($movie['release_date'])) : 'N/A' }}
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            @endforeach
+        </div>
+        
+        <button class="card-slider-control-next d-none d-md-block" aria-label="Next">
+            <i class="fas fa-chevron-right fa-2x"></i>
+        </button>
+    </div>
+</div>
+
+<!-- Trending This Week Section -->
+<div class="content-row">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="h4"><i class="fas fa-chart-line me-2"></i>Trending This Week</h2>
+    </div>
+    
+    <div class="position-relative">
+        <button class="card-slider-control-prev d-none d-md-block" aria-label="Previous">
+            <i class="fas fa-chevron-left fa-2x"></i>
+        </button>
+        
+        <div class="card-slider">
+            @foreach($trendingMovies as $movie)
+            <div class="movie-card-container">
+                <a href="{{ route('movie.show', $movie['id']) }}" class="text-decoration-none">
+                    <div class="movie-card">
+                        <img src="https://image.tmdb.org/t/p/w500{{ $movie['poster_path'] }}" 
+                             alt="{{ $movie['title'] }}"
+                             onerror="this.src='{{ asset('images/no-poster.jpg') }}'">
+                        
+                        <div class="movie-rating">
+                            {{ number_format($movie['vote_average'], 1) }}
+                        </div>
+                        
+                        <div class="card-body">
+                            <div class="movie-title">{{ $movie['title'] }}</div>
+                            <div class="movie-year">
+                                {{ isset($movie['release_date']) ? date('Y', strtotime($movie['release_date'])) : 'N/A' }}
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            @endforeach
+        </div>
+        
+        <button class="card-slider-control-next d-none d-md-block" aria-label="Next">
+            <i class="fas fa-chevron-right fa-2x"></i>
+        </button>
+    </div>
+</div>
+
+<!-- Recent Activity / Join CTA -->
 <div class="row">
     <div class="col-lg-8 mb-4">
         <div class="content-row">
@@ -118,11 +199,39 @@
             
             <div class="card">
                 <div class="card-body p-0">
-                    <div class="text-center p-5">
-                        <i class="fas fa-film fa-3x text-muted mb-3"></i>
-                        <h5>No Activity Yet</h5>
-                        <p class="text-muted">There are no movie reviews yet.</p>
-                    </div>
+                    @if($recentReviews->count() > 0)
+                        <div class="list-group list-group-flush">
+                            @foreach($recentReviews as $review)
+                            <div class="list-group-item p-3">
+                                <div class="d-flex">
+                                    <div class="avatar rounded-circle text-white d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px; font-size: 20px;">
+                                        {{ strtoupper(substr($review->user->username, 0, 1)) }}
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <div class="d-flex justify-content-between mb-1">
+                                            <div>
+                                                <strong>{{ $review->user->username }}</strong>
+                                                <span>reviewed</span>
+                                                <strong>{{ $review->movie_title }}</strong>
+                                            </div>
+                                            <small class="text-muted">{{ $review->created_at->diffForHumans() }}</small>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <span class="badge bg-primary me-2">{{ number_format($review->rating, 1) }}/10</span>
+                                            <p class="mb-0 text-light">{{ Str::limit($review->review_text, 100) }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <div class="text-center p-5">
+                            <i class="fas fa-film fa-3x text-muted mb-3"></i>
+                            <h5>No Activity Yet</h5>
+                            <p class="text-muted">Be the first to review a movie!</p>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -130,15 +239,11 @@
     
     <div class="col-lg-4">
         <div class="content-row">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h2 class="h4"><i class="fas fa-users me-2"></i>Top Reviewers</h2>
-            </div>
-            
             <div class="card">
                 <div class="card-body text-center p-4">
                     <i class="fas fa-film fa-3x text-primary mb-3"></i>
                     <h5>Join Our Community</h5>
-                    <p class="text-muted mb-4">Create an account to review movies.</p>
+                    <p class="text-muted mb-4">Create an account to review movies and engage with other movie lovers.</p>
                     @guest
                     <div class="d-grid gap-2">
                         <a href="{{ route('register') }}" class="btn btn-primary">
@@ -146,6 +251,12 @@
                         </a>
                         <a href="{{ route('login') }}" class="btn btn-outline-primary">
                             <i class="fas fa-sign-in-alt me-1"></i>Login
+                        </a>
+                    </div>
+                    @else
+                    <div class="d-grid">
+                        <a href="{{ route('profile') }}" class="btn btn-primary">
+                            <i class="fas fa-user me-1"></i>My Profile
                         </a>
                     </div>
                     @endguest

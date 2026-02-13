@@ -23,3 +23,6 @@ Route::post('/watchlist/add', [WatchlistController::class, 'addToWatchlist'])->m
 Route::delete('/watchlist/remove/{movieId}', [WatchlistController::class, 'removeFromWatchlist'])->middleware('auth')->name('watchlist.remove');
 Route::post('/watched/add', [WatchlistController::class, 'markAsWatched'])->middleware('auth')->name('watched.add');
 Route::delete('/watched/remove/{movieId}', [WatchlistController::class, 'removeFromWatched'])->middleware('auth')->name('watched.remove');
+
+Route::get('/movie/{id}', [MovieController::class, 'show'])->name('movie.show');
+Route::get('/search', [MovieController::class, 'search'])->name('movie.search');
