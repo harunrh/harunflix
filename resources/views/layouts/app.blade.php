@@ -4,44 +4,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HarunFlix - Movie Reviews</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        body { background-color: #141414; color: #fff; }
-        .navbar { background-color: #000 !important; }
-        .card { background-color: #1f1f1f; border: none; }
-        .movie-card { transition: transform 0.3s; cursor: pointer; }
-        .movie-card:hover { transform: scale(1.05); }
-    </style>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- HarunFlix CSS - IN ORDER -->
+    <link href="{{ asset('css/variables.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/base.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/navbar.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/cards.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/buttons-forms.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/movies.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/hero.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/reviews-profile.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/theme.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/responsive.css') }}" rel="stylesheet">
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="/">
-                <h3 class="mb-0">HarunFlix</h3>
+            <a class="navbar-brand" href="{{ route('home') }}">
+                <img src="{{ asset('images/harunflix.png') }}" alt="HarunFlix Logo">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <form action="{{ route('movie.search') }}" method="GET" class="d-flex mx-auto my-2 my-lg-0" style="width: 100%; max-width: 400px;">
-                    <input type="text" name="query" class="form-control me-2" placeholder="Search movies..." required>
-                    <button type="submit" class="btn btn-danger">Search</button>
-                </form>
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/">Home</a>
+                    <li class="nav-item me-2">
+                        <a class="nav-link theme-toggle" id="theme-toggle">
+                            <i class="fas fa-sun"></i>
+                        </a>
                     </li>
                     @auth
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-                                {{ Auth::user()->username }}
+                                <i class="fas fa-user-circle me-1"></i>{{ Auth::user()->username }}
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li><a class="dropdown-item" href="{{ route('profile') }}">My Profile</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
-                                    <form action="/logout" method="POST">
+                                    <form action="{{ route('logout') }}" method="POST">
                                         @csrf
                                         <button type="submit" class="dropdown-item">Logout</button>
                                     </form>
@@ -49,12 +59,8 @@
                             </ul>
                         </li>
                     @else
-                        <li class="nav-item">
-                            <a class="nav-link" href="/login">Login</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/register">Register</a>
-                        </li>
+                        <li class="nav-item"><a class="nav-link" href="{{ route('login') }}">Login</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ route('register') }}">Register</a></li>
                     @endauth
                 </ul>
             </div>
@@ -65,6 +71,29 @@
         @yield('content')
     </main>
 
+    <!-- Bootstrap & jQuery JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+        
+        <script>
+        $(document).ready(function() {
+            $('#theme-toggle').on('click', function() {
+                $('body').toggleClass('light-theme');
+                if ($('body').hasClass('light-theme')) {
+                    localStorage.setItem('theme', 'light');
+                    $(this).find('i').removeClass('fa-sun').addClass('fa-moon');
+                } else {
+                    localStorage.setItem('theme', 'dark');
+                    $(this).find('i').removeClass('fa-moon').addClass('fa-sun');
+                }
+            });
+            
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'light') {
+                $('body').addClass('light-theme');
+                $('#theme-toggle i').removeClass('fa-sun').addClass('fa-moon');
+            }
+        });
+        </script>
+    </body>
 </html>

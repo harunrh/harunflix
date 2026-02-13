@@ -1,0 +1,160 @@
+/* Light Theme */
+body.light-theme {
+  background-color: var(--light-bg);
+  color: #333;
+}
+
+body.light-theme .navbar,
+body.light-theme .navbar.scrolled {
+  background-color: white !important;
+}
+
+body.light-theme .navbar .nav-link {
+  color: #333 !important;
+}
+
+body.light-theme .navbar .theme-toggle i {
+  color: #666 !important;
+}
+
+body.light-theme .navbar .theme-toggle:hover i {
+  color: #333 !important;
+}
+
+body.light-theme .dropdown-menu {
+  background-color: white;
+}
+
+body.light-theme .dropdown-item {
+  color: #333;
+}
+
+body.light-theme .card {
+  background-color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  color: #333;
+}
+
+body.light-theme .card-header {
+  background-color: white;
+  border-bottom-color: #eee;
+  color: #333;
+}
+
+body.light-theme .form-control {
+  background-color: #f8f9fa;
+  border-color: #e9ecef;
+  color: #333;
+}
+
+body.light-theme .list-group-item {
+  background-color: white;
+  border-color: #eee;
+  color: #333 !important;
+}
+
+body.light-theme .text-light {
+  color: #333 !important;
+}
+
+body.light-theme .movie-title, 
+body.light-theme .movie-year,
+body.light-theme .movie-info p {
+  color: #333 !important;
+  text-shadow: none;
+}
+
+body.light-theme .movie-list-item {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+body.light-theme .movie-list-item:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .movie-list-item p {
+  color: #333 !important;
+}
+
+body.light-theme .activity-review-card {
+  background-color: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .activity-review-card p {
+  color: #333 !important;
+}
+
+body.light-theme .text-muted {
+  color: #6c757d !important;
+}
+
+body.light-theme .stat-label {
+  color: #6c757d !important;
+}
+
+body.light-theme .stat-value {
+  color: var(--primary-color) !important;
+}
+
+body.light-theme .stat-item {
+  border-bottom-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme footer {
+  background-color: #f0f0f0;
+  color: #666;
+}
+
+body.light-theme footer a {
+  color: #555 !important;
+}
+
+body.light-theme footer a:hover {
+  color: #333 !important;
+}
+
+body.light-theme .hero-overlay {
+  background: rgba(245, 245, 241, 0.85);
+}
+
+body.light-theme .hero-content {
+  color: #333;
+}
+
+body.light-theme .hero-content h1 {
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+body.light-theme .table tbody tr {
+  background-color: white;
+}
+
+body.light-theme #users-table th {
+  border-bottom: 1px solid #dee2e6;
+}
+
+body.light-theme .card-slider-control-prev,
+body.light-theme .card-slider-control-next {
+  background-color: rgba(0, 0, 0, 0.2);
+  color: var(--dark-bg);
+}
+
+body.light-theme .card-slider-control-prev:hover,
+body.light-theme .card-slider-control-next:hover {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+body.light-theme #section-expanded-view {
+  background-color: rgba(245, 245, 241, 0.5);
+}
+
+body.light-theme .nav-tabs .nav-link {
+  color: #666;
+}
+
+body.light-theme .nav-tabs .nav-link.active {
+  color: #333;
+  background-color: white;
+  border-color: #dee2e6;
+}

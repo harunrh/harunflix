@@ -1,0 +1,90 @@
+/* Base Styles */
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--dark-bg);
+  color: var(--light-text);
+  transition: all 0.3s ease;
+  padding-bottom: 80px;
+  padding-top: 70px;
+}
+
+.container {
+  padding: 20px 15px;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Content Rows */
+.content-row {
+  margin-top: 20px;
+  margin-bottom: 40px;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.content-row:first-child {
+  padding-top: 20px;
+}
+
+.content-row h2 {
+  margin-bottom: 15px;
+}
+
+/* Animations */
+@keyframes slideIn {
+  from {
+    transform: translateX(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.slide-in {
+  animation: slideIn 0.5s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Footer */
+footer {
+  background-color: rgba(0, 0, 0, 0.3);
+  padding: 20px 0;
+  color: var(--gray-text);
+  font-size: 0.9rem;
+  margin-top: 40px;
+}
