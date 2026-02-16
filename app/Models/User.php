@@ -45,16 +45,16 @@ class User extends Authenticatable
 
     public function reviews()
     {
-        return $this->hasMany(Review::class, 'user_id');
+        return $this->hasMany(Review::class, 'user_id', 'user_id');
     }
 
     public function watchlist()
     {
-        return $this->hasMany(Watchlist::class, 'user_id');
+        return $this->hasMany(Watchlist::class, 'user_id', 'user_id');
     }
 
     public function watchedMovies()
     {
-        return $this->hasMany(WatchedMovie::class, 'user_id');
+        return $this->hasMany(WatchedMovie::class, 'user_id', 'user_id');
     }
 }

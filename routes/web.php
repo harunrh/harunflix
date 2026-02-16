@@ -26,3 +26,10 @@ Route::delete('/watched/remove/{movieId}', [WatchlistController::class, 'removeF
 
 Route::get('/movie/{id}', [MovieController::class, 'show'])->name('movie.show');
 Route::get('/search', [MovieController::class, 'search'])->name('movie.search');
+
+// Review routes (protected by auth middleware)
+Route::middleware('auth')->group(function () {
+    Route::post('/review', [ReviewController::class, 'store'])->name('review.store');
+    Route::delete('/review/{id}', [ReviewController::class, 'destroy'])->name('review.destroy');
+    Route::get('/my-reviews', [ReviewController::class, 'myReviews'])->name('reviews.my');
+});

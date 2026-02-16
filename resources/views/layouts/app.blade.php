@@ -42,26 +42,24 @@
                             <i class="fas fa-sun"></i>
                         </a>
                     </li>
-                    @auth
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-                                <i class="fas fa-user-circle me-1"></i>{{ Auth::user()->username }}
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="{{ route('profile') }}">My Profile</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li>
-                                    <form action="{{ route('logout') }}" method="POST">
-                                        @csrf
-                                        <button type="submit" class="dropdown-item">Logout</button>
-                                    </form>
-                                </li>
-                            </ul>
-                        </li>
-                    @else
-                        <li class="nav-item"><a class="nav-link" href="{{ route('login') }}">Login</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ route('register') }}">Register</a></li>
-                    @endauth
+                        @auth
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                                    <i class="fas fa-user-circle me-1"></i>{{ Auth::user()->username }}
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" href="{{ route('profile') }}"><i class="fas fa-user me-2"></i>My Profile</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('reviews.my') }}"><i class="fas fa-star me-2"></i>My Reviews</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <form action="{{ route('logout') }}" method="POST">
+                                            @csrf
+                                            <button type="submit" class="dropdown-item"><i class="fas fa-sign-out-alt me-2"></i>Logout</button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+                        @endauth
                 </ul>
             </div>
         </div>

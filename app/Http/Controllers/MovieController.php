@@ -2,12 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Services\TmdbService;
 use App\Models\Review;
-use App\Models\Watchlist;
-use App\Models\WatchedMovie;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 class MovieController extends Controller
 {
@@ -18,47 +15,62 @@ class MovieController extends Controller
         $this->tmdb = $tmdb;
     }
 
-
+    /**
+     * Show movie details
+     */
     public function show($id)
     {
+        // Get movie details from TMDB
         $movie = $this->tmdb->getMovieDetails($id);
-        
+
+        if (!$movie) {
+            abort(404, 'Movie not found');
+        }
+
+        // Get reviews from database for this movie
         $reviews = Review::where('movie_id', $id)
             ->with('user')
             ->orderBy('created_at', 'desc')
             ->get();
 
-        $inWatchlist = false;
-        $isWatched = false;
+        // Calculate average rating from our reviews
+        $ourAverageRating = $reviews->avg('rating');
+        $ourReviewCount = $reviews->count();
 
-        if (Auth::check()) {
-            $inWatchlist = Watchlist::where('user_id', Auth::id())
-                                    ->where('movie_id', $id)
-                                    ->exists();
-            
-            $isWatched = WatchedMovie::where('user_id', Auth::id())
-                                    ->where('movie_id', $id)
-                                    ->exists();
+        // Check if current user has reviewed this movie
+        $userReview = null;
+        if (auth()->check()) {
+            $userReview = Review::where('movie_id', $id)
+                ->where('user_id', auth()->id())
+                ->first();
         }
 
         return view('movies.show', [
             'movie' => $movie,
             'reviews' => $reviews,
-            'inWatchlist' => $inWatchlist,
-            'isWatched' => $isWatched
+            'ourAverageRating' => $ourAverageRating,
+            'ourReviewCount' => $ourReviewCount,
+            'userReview' => $userReview
         ]);
     }
 
-
+    /**
+     * Search movies
+     */
     public function search(Request $request)
     {
         $query = $request->input('query');
-        $movies = $this->tmdb->searchMovies($query);
+        
+        if (empty($query)) {
+            return redirect()->route('home');
+        }
+
+        $results = $this->tmdb->searchMovies($query);
 
         return view('movies.search', [
-            'movies' => $movies,
-            'query' => $query
+            'query' => $query,
+            'movies' => $results['results'] ?? [],
+            'totalResults' => $results['total_results'] ?? 0
         ]);
     }
-
 }

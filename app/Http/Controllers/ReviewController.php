@@ -2,33 +2,69 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Review;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 class ReviewController extends Controller
 {
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'movie_id' => 'required|integer',
-            'movie_title' => 'required|string',
+            'movie_title' => 'required|string|max:255',
+            'poster_path' => 'nullable|string',
+            'release_year' => 'nullable|string|max:4',
             'rating' => 'required|numeric|min:0|max:10',
-            'review_text' => 'nullable|string',
+            'review_text' => 'nullable|string|max:1000'
         ]);
 
-        Review::updateOrCreate(
-            [
-                'user_id' => Auth::id(),
-                'movie_id' => $request->movie_id
-            ],
-            [
-                'movie_title' => $request->movie_title,
-                'rating' => $request->rating,
-                'review_text' => $request->review_text
-            ]
-        );
+        $reviewData = [
+            'user_id' => auth()->id(),
+            'movie_id' => $validated['movie_id'],
+            'movie_title' => $validated['movie_title'],
+            'poster_path' => $validated['poster_path'] ?? null,
+            'release_year' => $validated['release_year'] ?? null,
+            'rating' => $validated['rating'],
+            'review_text' => $validated['review_text']
+        ];
 
-        return redirect()->back()->with('success', 'Review submitted successfully!');
+        // Check if user already reviewed this movie
+        $existingReview = Review::where('movie_id', $validated['movie_id'])
+                                ->where('user_id', auth()->id())
+                                ->first();
+
+        if ($existingReview) {
+            $existingReview->update($reviewData);
+            return redirect()->route('movie.show', $validated['movie_id'])
+                           ->with('success', 'Review updated successfully!');
+        } else {
+            Review::create($reviewData);
+            return redirect()->route('movie.show', $validated['movie_id'])
+                           ->with('success', 'Review added successfully!');
+        }
+    }
+
+    public function destroy($id)
+    {
+        $review = Review::where('review_id', $id)->firstOrFail();
+        
+        if ($review->user_id !== auth()->id()) {
+            return back()->with('error', 'Unauthorized action.');
+        }
+        
+        $movieId = $review->movie_id;
+        $review->delete();
+        
+        return redirect()->route('movie.show', $movieId)
+                       ->with('success', 'Review deleted successfully!');
+    }
+
+    public function myReviews()
+    {
+        $reviews = Review::where('user_id', auth()->id())
+                        ->orderBy('created_at', 'desc')
+                        ->get();
+        
+        return view('reviews.my-reviews', compact('reviews'));
     }
 }
