@@ -289,17 +289,20 @@
 @endauth
 
 <script>
-$(document).ready(function() {
-    // Slider controls
-    $('.card-slider-control-prev').on('click', function() {
-        const slider = $(this).closest('.content-row').find('.card-slider');
-        slider.animate({ scrollLeft: '-=600' }, 300);
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.card-slider-control-prev').forEach(button => {
+            button.addEventListener('click', () => {
+                const slider = button.closest('.content-row').querySelector('.card-slider');
+                slider.scrollBy({ left: -600, behavior: 'smooth' });
+            });
+        });
+
+        document.querySelectorAll('.card-slider-control-next').forEach(button => {
+            button.addEventListener('click', () => {
+                const slider = button.closest('.content-row').querySelector('.card-slider');
+                slider.scrollBy({ left: 600, behavior: 'smooth' });
+            });
+        });
     });
-    
-    $('.card-slider-control-next').on('click', function() {
-        const slider = $(this).closest('.content-row').find('.card-slider');
-        slider.animate({ scrollLeft: '+=600' }, 300);
-    });
-});
 </script>
 @endsection

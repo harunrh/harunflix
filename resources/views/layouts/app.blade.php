@@ -70,28 +70,26 @@
     </main>
 
     <!-- Bootstrap & jQuery JS -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-        
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
         <script>
-        $(document).ready(function() {
-            $('#theme-toggle').on('click', function() {
-                $('body').toggleClass('light-theme');
-                if ($('body').hasClass('light-theme')) {
-                    localStorage.setItem('theme', 'light');
-                    $(this).find('i').removeClass('fa-sun').addClass('fa-moon');
-                } else {
-                    localStorage.setItem('theme', 'dark');
-                    $(this).find('i').removeClass('fa-moon').addClass('fa-sun');
+            document.addEventListener('DOMContentLoaded', () => {
+                const toggle = document.getElementById('theme-toggle');
+                const icon = toggle.querySelector('i');
+
+                const savedTheme = localStorage.getItem('theme');
+                if (savedTheme === 'light') {
+                    document.body.classList.add('light-theme');
+                    icon.classList.replace('fa-sun', 'fa-moon');
                 }
+
+                toggle.addEventListener('click', () => {
+                    document.body.classList.toggle('light-theme');
+                    const isLight = document.body.classList.contains('light-theme');
+                    localStorage.setItem('theme', isLight ? 'light' : 'dark');
+                    icon.classList.replace(isLight ? 'fa-sun' : 'fa-moon', isLight ? 'fa-moon' : 'fa-sun');
+                });
             });
-            
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'light') {
-                $('body').addClass('light-theme');
-                $('#theme-toggle i').removeClass('fa-sun').addClass('fa-moon');
-            }
-        });
         </script>
     </body>
 </html>
