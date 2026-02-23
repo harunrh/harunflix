@@ -295,13 +295,11 @@
 
         // Live search
         const searchInput = document.getElementById('live-search-input');
-        console.log('Search input found:', searchInput);
         const resultsBox = document.getElementById('live-search-results');
         let searchTimeout = null;
 
         searchInput.addEventListener('input', () => {
             const query = searchInput.value.trim();
-            console.log('Typing detected:', query);
 
             clearTimeout(searchTimeout);
 
@@ -311,12 +309,10 @@
                 return;
             }
 
-searchTimeout = setTimeout(() => {
-    console.log('Fetching:', query);
-    fetch(`/search/live?query=${encodeURIComponent(query)}`)
-        .then(res => res.json())
-        .then(movies => {
-            console.log('Results:', movies);
+            searchTimeout = setTimeout(() => {
+                fetch(`/search/live?query=${encodeURIComponent(query)}`)
+                    .then(res => res.json())
+                    .then(movies => {
                         if (movies.length === 0) {
                             resultsBox.style.display = 'none';
                             return;
