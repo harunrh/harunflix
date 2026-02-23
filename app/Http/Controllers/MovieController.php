@@ -73,4 +73,34 @@ class MovieController extends Controller
             'totalResults' => $results['total_results'] ?? 0
         ]);
     }
+
+        /**
+     * Live search for movies - returns JSON
+     */
+    public function liveSearch(Request $request)
+    {
+        $query = $request->input('query');
+
+        if (strlen($query) < 2) {
+            return response()->json([]);
+        }
+
+        $results = $this->tmdb->searchMovies($query);
+        $movies = array_slice($results['results'] ?? [], 0, 6);
+
+        $formatted = array_map(function ($movie) {
+            return [
+                'id' => $movie['id'],
+                'title' => $movie['title'],
+                'year' => isset($movie['release_date']) ? substr($movie['release_date'], 0, 4) : 'N/A',
+                'poster' => $movie['poster_path']
+                    ? 'https://image.tmdb.org/t/p/w92' . $movie['poster_path']
+                    : null,
+                'rating' => number_format($movie['vote_average'] ?? 0, 1),
+                'url' => route('movie.show', $movie['id'])
+            ];
+        }, $movies);
+
+        return response()->json($formatted);
+    }
 }

@@ -47,11 +47,21 @@
             <div class="row justify-content-center">
                 <div class="col-md-8">
                     <form action="{{ route('movie.search') }}" method="GET">
-                        <div class="input-group input-group-lg">
-                            <input type="text" class="form-control" name="query" placeholder="Search movies..." required>
-                            <button class="btn btn-primary" type="submit">
-                                <i class="fas fa-search"></i>
-                            </button>
+                        <div class="position-relative">
+                            <div class="input-group input-group-lg">
+                                <input 
+                                    type="text" 
+                                    class="form-control" 
+                                    name="query" 
+                                    id="live-search-input"
+                                    placeholder="Search movies..." 
+                                    autocomplete="off"
+                                    required>
+                                <button class="btn btn-primary" type="submit">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                            <div id="live-search-results"></div>
                         </div>
                     </form>
                 </div>
@@ -268,6 +278,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
+        // Slider controls
         document.querySelectorAll('.card-slider-control-prev').forEach(button => {
             button.addEventListener('click', () => {
                 const slider = button.closest('.content-row').querySelector('.card-slider');
@@ -280,6 +291,57 @@
                 const slider = button.closest('.content-row').querySelector('.card-slider');
                 slider.scrollBy({ left: 600, behavior: 'smooth' });
             });
+        });
+
+        // Live search
+        const searchInput = document.getElementById('live-search-input');
+        console.log('Search input found:', searchInput);
+        const resultsBox = document.getElementById('live-search-results');
+        let searchTimeout = null;
+
+        searchInput.addEventListener('input', () => {
+            const query = searchInput.value.trim();
+            console.log('Typing detected:', query);
+
+            clearTimeout(searchTimeout);
+
+            if (query.length < 2) {
+                resultsBox.innerHTML = '';
+                resultsBox.style.display = 'none';
+                return;
+            }
+
+searchTimeout = setTimeout(() => {
+    console.log('Fetching:', query);
+    fetch(`/search/live?query=${encodeURIComponent(query)}`)
+        .then(res => res.json())
+        .then(movies => {
+            console.log('Results:', movies);
+                        if (movies.length === 0) {
+                            resultsBox.style.display = 'none';
+                            return;
+                        }
+
+                        resultsBox.innerHTML = movies.map(movie => `
+                            <a href="${movie.url}" class="live-search-item">
+                                <img src="${movie.poster ?? 'https://via.placeholder.com/40x60?text=N/A'}" alt="${movie.title}">
+                                <div class="live-search-info">
+                                    <div class="live-search-title">${movie.title}</div>
+                                    <div class="live-search-meta">${movie.year} &bull; ⭐ ${movie.rating}</div>
+                                </div>
+                            </a>
+                        `).join('');
+
+                        resultsBox.style.display = 'block';
+                    });
+            }, 300);
+        });
+
+        // Hide results when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!searchInput.contains(e.target) && !resultsBox.contains(e.target)) {
+                resultsBox.style.display = 'none';
+            }
         });
     });
 </script>
