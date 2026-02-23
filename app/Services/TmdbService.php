@@ -74,13 +74,15 @@ class TmdbService
     public function searchMovies($query, $page = 1)
     {
         try {
-            $response = Http::get("{$this->baseUrl}/search/movie", [
-                'api_key' => $this->apiKey,
-                'query' => $query,
-                'page' => $page
-            ]);
-
-            return $response->json();
+            $cacheKey = 'search_' . md5($query . $page);
+            return Cache::remember($cacheKey, 300, function () use ($query, $page) {
+                $response = Http::get("{$this->baseUrl}/search/movie", [
+                    'api_key' => $this->apiKey,
+                    'query' => $query,
+                    'page' => $page
+                ]);
+                return $response->json();
+            });
         } catch (\Exception $e) {
             return ['results' => []];
         }
