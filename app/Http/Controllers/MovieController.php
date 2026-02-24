@@ -20,29 +20,38 @@ class MovieController extends Controller
      */
     public function show($id)
     {
-        // Get movie details from TMDB
         $movie = $this->tmdb->getMovieDetails($id);
 
         if (!$movie) {
             abort(404, 'Movie not found');
         }
 
-        // Get reviews from database for this movie
         $reviews = Review::where('movie_id', $id)
             ->with('user')
             ->orderBy('created_at', 'desc')
             ->get();
 
-        // Calculate average rating from our reviews
         $ourAverageRating = $reviews->avg('rating');
         $ourReviewCount = $reviews->count();
 
-        // Check if current user has reviewed this movie
         $userReview = null;
+        $inWatchlist = false;
+        $inWatched = false;
+
         if (auth()->check()) {
+            $userId = auth()->id();
+
             $userReview = Review::where('movie_id', $id)
-                ->where('user_id', auth()->id())
+                ->where('user_id', $userId)
                 ->first();
+
+            $inWatchlist = \App\Models\Watchlist::where('user_id', $userId)
+                ->where('movie_id', $id)
+                ->exists();
+
+            $inWatched = \App\Models\WatchedMovie::where('user_id', $userId)
+                ->where('movie_id', $id)
+                ->exists();
         }
 
         return view('movies.show', [
@@ -50,7 +59,9 @@ class MovieController extends Controller
             'reviews' => $reviews,
             'ourAverageRating' => $ourAverageRating,
             'ourReviewCount' => $ourReviewCount,
-            'userReview' => $userReview
+            'userReview' => $userReview,
+            'inWatchlist' => $inWatchlist,
+            'inWatched' => $inWatched,
         ]);
     }
 

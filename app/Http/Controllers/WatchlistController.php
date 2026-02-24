@@ -11,17 +11,23 @@ class WatchlistController extends Controller
 {
     public function addToWatchlist(Request $request)
     {
-        Watchlist::updateOrCreate(
-            [
-                'user_id' => Auth::id(),
-                'movie_id' => $request->movie_id
-            ],
-            [
-                'movie_title' => $request->movie_title
-            ]
-        );
+        $existing = Watchlist::where('user_id', Auth::id())
+            ->where('movie_id', $request->movie_id)
+            ->first();
 
-        return redirect()->back()->with('success', 'Added to watchlist!');
+        if ($existing) {
+            $existing->poster_path = $request->poster_path;
+            $existing->save();
+        } else {
+            Watchlist::create([
+                'user_id'     => Auth::id(),
+                'movie_id'    => $request->movie_id,
+                'movie_title' => $request->movie_title,
+                'poster_path' => $request->poster_path,
+            ]);
+        }
+
+        return response()->json(['message' => 'Added to watchlist!', 'status' => 'added']);
     }
 
     public function removeFromWatchlist($movieId)
@@ -30,23 +36,29 @@ class WatchlistController extends Controller
                  ->where('movie_id', $movieId)
                  ->delete();
 
-        return redirect()->back()->with('success', 'Removed from watchlist!');
+        return response()->json(['message' => 'Removed from watchlist', 'status' => 'removed']);
     }
 
     public function markAsWatched(Request $request)
     {
-        WatchedMovie::updateOrCreate(
-            [
-                'user_id' => Auth::id(),
-                'movie_id' => $request->movie_id
-            ],
-            [
-                'movie_title' => $request->movie_title,
-                'runtime' => $request->runtime
-            ]
-        );
+        $existing = WatchedMovie::where('user_id', Auth::id())
+            ->where('movie_id', $request->movie_id)
+            ->first();
 
-        return redirect()->back()->with('success', 'Marked as watched!');
+        if ($existing) {
+            $existing->poster_path = $request->poster_path;
+            $existing->save();
+        } else {
+            WatchedMovie::create([
+                'user_id'     => Auth::id(),
+                'movie_id'    => $request->movie_id,
+                'movie_title' => $request->movie_title,
+                'runtime'     => $request->runtime,
+                'poster_path' => $request->poster_path,
+            ]);
+        }
+
+        return response()->json(['message' => 'Marked as watched!', 'status' => 'watched']);
     }
 
     public function removeFromWatched($movieId)
@@ -55,6 +67,6 @@ class WatchlistController extends Controller
                     ->where('movie_id', $movieId)
                     ->delete();
 
-        return redirect()->back()->with('success', 'Removed from watched!');
+        return response()->json(['message' => 'Removed from watched', 'status' => 'removed']);
     }
 }
