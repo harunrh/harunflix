@@ -89,8 +89,13 @@
                                 @if($review->poster_path)
                                 <img src="https://image.tmdb.org/t/p/w92{{ $review->poster_path }}"
                                      alt="{{ $review->movie_title }}"
-                                     class="rounded"
+                                     class="rounded flex-shrink-0"
                                      style="width: 60px; height: 90px; object-fit: cover;">
+                                @else
+                                <div class="bg-secondary rounded d-flex align-items-center justify-content-center flex-shrink-0"
+                                     style="width: 60px; height: 90px;">
+                                    <i class="fas fa-film text-muted"></i>
+                                </div>
                                 @endif
                                 <div class="flex-grow-1">
                                     <div class="d-flex justify-content-between align-items-start">
@@ -131,10 +136,20 @@
                         @foreach($watchlist as $item)
                         <div class="col-6 col-md-4">
                             <a href="{{ route('movie.show', $item->movie_id) }}" class="text-decoration-none">
-                                <div class="card h-100">
-                                    <div class="card-body">
-                                        <h6 class="card-title">{{ $item->movie_title }}</h6>
-                                        <small class="text-muted">Added {{ $item->created_at->diffForHumans() }}</small>
+                                <div class="card h-100" style="overflow: hidden;">
+                                    @if($item->poster_path)
+                                    <img src="https://image.tmdb.org/t/p/w342{{ $item->poster_path }}"
+                                         alt="{{ $item->movie_title }}"
+                                         class="card-img-top"
+                                         style="width: 100%; aspect-ratio: 2/3; object-fit: cover;">
+                                    @else
+                                    <div class="bg-secondary d-flex align-items-center justify-content-center" style="aspect-ratio: 2/3;">
+                                        <i class="fas fa-film fa-2x text-muted"></i>
+                                    </div>
+                                    @endif
+                                    <div class="card-body p-2">
+                                        <h6 class="card-title mb-1" style="font-size: 0.85rem;">{{ $item->movie_title }}</h6>
+                                        <small class="text-muted">Added {{ $item->created_at->format('M d, Y') }}</small>
                                     </div>
                                 </div>
                             </a>
@@ -153,15 +168,25 @@
 
             <!-- Watched Tab -->
             <div class="tab-pane fade" id="watched" role="tabpanel">
-                @if($watchedMovies->count() > 0)
+                @if($allWatched->count() > 0)
                     <div class="row g-3">
-                        @foreach($watchedMovies as $movie)
+                        @foreach($allWatched as $movie)
                         <div class="col-6 col-md-4">
                             <a href="{{ route('movie.show', $movie->movie_id) }}" class="text-decoration-none">
-                                <div class="card h-100">
-                                    <div class="card-body">
-                                        <h6 class="card-title">{{ $movie->movie_title }}</h6>
-                                        <small class="text-muted">Watched {{ $movie->created_at->diffForHumans() }}</small>
+                                <div class="card h-100" style="overflow: hidden;">
+                                    @if($movie->poster_path)
+                                    <img src="https://image.tmdb.org/t/p/w342{{ $movie->poster_path }}"
+                                         alt="{{ $movie->movie_title }}"
+                                         class="card-img-top"
+                                         style="width: 100%; aspect-ratio: 2/3; object-fit: cover;">
+                                    @else
+                                    <div class="bg-secondary d-flex align-items-center justify-content-center" style="aspect-ratio: 2/3;">
+                                        <i class="fas fa-film fa-2x text-muted"></i>
+                                    </div>
+                                    @endif
+                                    <div class="card-body p-2">
+                                        <h6 class="card-title mb-1" style="font-size: 0.85rem;">{{ $movie->movie_title }}</h6>
+                                        <small class="text-muted">Watched {{ $movie->created_at->format('M d, Y') }}</small>
                                     </div>
                                 </div>
                             </a>

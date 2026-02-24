@@ -14,7 +14,8 @@ class WatchedMovie extends Model
         'movie_title',
         'watched_date',
         'runtime',
-        'added_date'
+        'added_date',
+        'poster_path'
     ];
 
     public function user()

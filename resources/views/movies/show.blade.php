@@ -2,21 +2,6 @@
 
 @section('content')
 
-<!-- Flash Messages -->
-@if(session('success'))
-<div class="alert alert-success alert-dismissible fade show" role="alert">
-    <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
-@endif
-
-@if(session('error'))
-<div class="alert alert-danger alert-dismissible fade show" role="alert">
-    <i class="fas fa-exclamation-circle me-2"></i>{{ session('error') }}
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
-@endif
-
 <!-- Movie Header Section -->
 <div class="card mb-4">
     <div class="card-body p-0">
@@ -74,6 +59,29 @@
                                 <i class="fas fa-edit me-1"></i>Edit Review
                             </button>
                         @endif
+
+                        <button 
+                            id="watchlistBtn"
+                            class="btn {{ $inWatchlist ? 'btn-warning' : 'btn-outline-warning' }}"
+                            data-movie-id="{{ $movie['id'] }}"
+                            data-movie-title="{{ $movie['title'] }}"
+                            data-poster="{{ $movie['poster_path'] ?? '' }}"
+                            data-in-watchlist="{{ $inWatchlist ? 'true' : 'false' }}">
+                            <i class="fas fa-bookmark me-1"></i>
+                            <span>{{ $inWatchlist ? 'In Watchlist' : 'Add to Watchlist' }}</span>
+                        </button>
+
+                        <button 
+                            id="watchedBtn"
+                            class="btn {{ $inWatched ? 'btn-info' : 'btn-outline-info' }}"
+                            data-movie-id="{{ $movie['id'] }}"
+                            data-movie-title="{{ $movie['title'] }}"
+                            data-runtime="{{ $movie['runtime'] ?? 0 }}"
+                            data-poster="{{ $movie['poster_path'] ?? '' }}"
+                            data-in-watched="{{ $inWatched ? 'true' : 'false' }}">
+                            <i class="fas fa-eye me-1"></i>
+                            <span>{{ $inWatched ? 'Watched' : 'Mark as Watched' }}</span>
+                        </button>
                     @else
                         <a href="{{ route('login') }}" class="btn btn-primary">
                             <i class="fas fa-sign-in-alt me-1"></i>Login to Review
@@ -290,6 +298,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
+        // Slider controls
         document.querySelectorAll('.card-slider-control-prev').forEach(button => {
             button.addEventListener('click', () => {
                 const slider = button.closest('.content-row').querySelector('.card-slider');
@@ -303,6 +312,79 @@
                 slider.scrollBy({ left: 600, behavior: 'smooth' });
             });
         });
+
+        // Watchlist button
+        const watchlistBtn = document.getElementById('watchlistBtn');
+        if (watchlistBtn) {
+            watchlistBtn.addEventListener('click', async () => {
+                const movieId = watchlistBtn.dataset.movieId;
+                const movieTitle = watchlistBtn.dataset.movieTitle;
+                const poster = watchlistBtn.dataset.poster;
+                const inWatchlist = watchlistBtn.dataset.inWatchlist === 'true';
+
+                const url = inWatchlist
+                    ? `/watchlist/remove/${movieId}`
+                    : '/watchlist/add';
+
+                const options = inWatchlist
+                    ? {
+                        method: 'DELETE',
+                        headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Content-Type': 'application/json' }
+                      }
+                    : {
+                        method: 'POST',
+                        headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ movie_id: movieId, movie_title: movieTitle, poster_path: poster })
+                      };
+
+                const res = await fetch(url, options);
+                const data = await res.json();
+
+                showToast(data.message, 'success');
+
+                watchlistBtn.dataset.inWatchlist = inWatchlist ? 'false' : 'true';
+                watchlistBtn.classList.toggle('btn-warning');
+                watchlistBtn.classList.toggle('btn-outline-warning');
+                watchlistBtn.querySelector('span').textContent = inWatchlist ? 'Add to Watchlist' : 'In Watchlist';
+            });
+        }
+
+        // Watched button
+        const watchedBtn = document.getElementById('watchedBtn');
+        if (watchedBtn) {
+            watchedBtn.addEventListener('click', async () => {
+                const movieId = watchedBtn.dataset.movieId;
+                const movieTitle = watchedBtn.dataset.movieTitle;
+                const runtime = watchedBtn.dataset.runtime;
+                const poster = watchedBtn.dataset.poster;
+                const inWatched = watchedBtn.dataset.inWatched === 'true';
+
+                const url = inWatched
+                    ? `/watched/remove/${movieId}`
+                    : '/watched/add';
+
+                const options = inWatched
+                    ? {
+                        method: 'DELETE',
+                        headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Content-Type': 'application/json' }
+                      }
+                    : {
+                        method: 'POST',
+                        headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ movie_id: movieId, movie_title: movieTitle, runtime: runtime, poster_path: poster })
+                      };
+
+                const res = await fetch(url, options);
+                const data = await res.json();
+
+                showToast(data.message, 'success');
+
+                watchedBtn.dataset.inWatched = inWatched ? 'false' : 'true';
+                watchedBtn.classList.toggle('btn-info');
+                watchedBtn.classList.toggle('btn-outline-info');
+                watchedBtn.querySelector('span').textContent = inWatched ? 'Mark as Watched' : 'Watched';
+            });
+        }
     });
 </script>
 @endsection

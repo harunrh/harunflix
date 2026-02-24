@@ -91,5 +91,50 @@
                 });
             });
         </script>
+
+        <!-- Toast Notifications -->
+        <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 9999">
+            <div id="appToast" class="toast align-items-center text-white border-0" role="alert">
+                <div class="d-flex">
+                    <div class="toast-body" id="toastMessage"></div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                </div>
+            </div>
+        </div>
+
+        <script>
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('appToast');
+            const toastMessage = document.getElementById('toastMessage');
+            
+            toastMessage.textContent = message;
+            
+            // Reset classes
+            toast.className = 'toast align-items-center text-white border-0';
+            
+            if (type === 'success') {
+                toast.classList.add('bg-success');
+            } else if (type === 'error') {
+                toast.classList.add('bg-danger');
+            } else if (type === 'info') {
+                toast.classList.add('bg-primary');
+            }
+            
+            const bsToast = new bootstrap.Toast(toast, { delay: 3000 });
+            bsToast.show();
+        }
+
+        // Auto-fire if Laravel flashed a message
+        document.addEventListener('DOMContentLoaded', function () {
+            @if(session('success'))
+                showToast("{{ session('success') }}", 'success');
+            @elseif(session('error'))
+                showToast("{{ session('error') }}", 'error');
+            @elseif(session('info'))
+                showToast("{{ session('info') }}", 'info');
+            @endif
+        });
+        </script>
+
     </body>
 </html>

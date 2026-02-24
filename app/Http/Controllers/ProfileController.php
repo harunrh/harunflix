@@ -34,7 +34,27 @@ class ProfileController extends Controller
                                     ->orderBy('created_at', 'desc')
                                     ->get();
 
-        // Calculate stats
+        // Merge reviewed movies into watched list so all rated films appear there
+        $watchedMovieIds = $watchedMovies->pluck('movie_id')->toArray();
+
+        $reviewedAsWatched = $reviews->filter(function ($review) use ($watchedMovieIds) {
+            return !in_array($review->movie_id, $watchedMovieIds);
+        })->map(function ($review) {
+            return (object) [
+                'movie_id'    => $review->movie_id,
+                'movie_title' => $review->movie_title,
+                'poster_path' => $review->poster_path ?? null,
+                'created_at'  => $review->created_at,
+                'from_review' => true,
+            ];
+        });
+
+        $allWatched = collect($watchedMovies->all())
+            ->concat($reviewedAsWatched)
+            ->sortByDesc('created_at')
+            ->values();
+
+        // Stats
         $averageRating = $reviews->count() > 0
             ? round($reviews->avg('rating'), 1)
             : null;
@@ -43,23 +63,22 @@ class ProfileController extends Controller
         $totalHours = floor($totalWatchTime / 60);
         $totalMinutes = $totalWatchTime % 60;
 
-        $totalWatched = max($watchedMovies->count(), $reviews->count());
+        $totalWatched = $allWatched->count();
 
-        // Get favourite genre from reviews
         $favouriteGenre = $this->getFavouriteGenre($reviews);
 
         $stats = [
-            'review_count' => $reviews->count(),
+            'review_count'   => $reviews->count(),
             'average_rating' => $averageRating,
-            'watchlist_count' => $watchlist->count(),
-            'watched_count' => $totalWatched,
-            'total_hours' => $totalHours,
-            'total_minutes' => $totalMinutes,
-            'favourite_genre' => $favouriteGenre,
+            'watchlist_count'=> $watchlist->count(),
+            'watched_count'  => $totalWatched,
+            'total_hours'    => $totalHours,
+            'total_minutes'  => $totalMinutes,
+            'favourite_genre'=> $favouriteGenre,
         ];
 
         return view('profile.index', compact(
-            'user', 'reviews', 'watchlist', 'watchedMovies', 'stats'
+            'user', 'reviews', 'watchlist', 'watchedMovies', 'allWatched', 'stats'
         ));
     }
 

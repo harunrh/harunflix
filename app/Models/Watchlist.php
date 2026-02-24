@@ -12,7 +12,8 @@ class Watchlist extends Model
         'user_id',
         'movie_id',
         'movie_title',
-        'added_date'
+        'added_date',
+        'poster_path'
     ];
 
     public function user()
