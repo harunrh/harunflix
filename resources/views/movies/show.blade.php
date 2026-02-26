@@ -161,19 +161,42 @@
                                         <span class="badge bg-success ms-1">Your Review</span>
                                         @endif
                                     </div>
-                                    <div class="d-flex align-items-center gap-2">
-                                        <small class="text-muted">{{ $review->created_at->format('M d, Y') }}</small>
-                                        
-                                        @if(auth()->check() && auth()->id() === $review->user_id)
-                                        <form action="{{ route('review.destroy', $review->review_id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this review?');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-outline-danger">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </form>
-                                        @endif
-                                    </div>
+                            <div class="d-flex align-items-center gap-2 flex-wrap">
+                                <small class="text-muted">{{ $review->created_at->format('M d, Y') }}</small>
+
+                                @auth
+                                <button class="btn btn-sm btn-outline-success like-btn"
+                                    data-review-id="{{ $review->review_id }}"
+                                    data-type="like"
+                                    style="{{ isset($userReactions[$review->review_id]) && $userReactions[$review->review_id] === 'like' ? 'background-color: #198754; color: white;' : '' }}">
+                                    <i class="fas fa-thumbs-up me-1"></i>
+                                    <span class="like-count">{{ $review->likes->count() }}</span>
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger dislike-btn"
+                                    data-review-id="{{ $review->review_id }}"
+                                    data-type="dislike"
+                                    style="{{ isset($userReactions[$review->review_id]) && $userReactions[$review->review_id] === 'dislike' ? 'background-color: #dc3545; color: white;' : '' }}">
+                                    <i class="fas fa-thumbs-down me-1"></i>
+                                    <span class="dislike-count">{{ $review->dislikes->count() }}</span>
+                                </button>
+                                <button class="btn btn-sm btn-outline-secondary reactions-btn"
+                                    data-review-id="{{ $review->review_id }}"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#reactionsModal">
+                                    <i class="fas fa-users me-1"></i>
+                                </button>
+                                @endauth
+
+                                @if(auth()->check() && auth()->id() === $review->user_id)
+                                <form action="{{ route('review.destroy', $review->review_id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this review?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                                @endif
+                            </div>
                                 </div>
                                 <p class="mb-0 text-light">
                                     {{ $review->review_text ?: 'No written review' }}
@@ -385,6 +408,86 @@
                 watchedBtn.querySelector('span').textContent = inWatched ? 'Mark as Watched' : 'Watched';
             });
         }
+
+             // Like/dislike buttons
+            document.querySelectorAll('.like-btn, .dislike-btn').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const reviewId = btn.dataset.reviewId;
+                    const type = btn.dataset.type;
+
+                    const res = await fetch(`/review/${reviewId}/react`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ type })
+                    });
+
+                    const data = await res.json();
+
+                    const card = btn.closest('.list-group-item');
+                    const likeBtn = card.querySelector('.like-btn');
+                    const dislikeBtn = card.querySelector('.dislike-btn');
+
+                    likeBtn.querySelector('.like-count').textContent = data.likes;
+                    dislikeBtn.querySelector('.dislike-count').textContent = data.dislikes;
+
+                    likeBtn.style.backgroundColor = data.userReaction === 'like' ? '#198754' : '';
+                    likeBtn.style.color = data.userReaction === 'like' ? 'white' : '';
+                    dislikeBtn.style.backgroundColor = data.userReaction === 'dislike' ? '#dc3545' : '';
+                    dislikeBtn.style.color = data.userReaction === 'dislike' ? 'white' : '';
+                });
+            });
+
+            // Reactions modal
+            document.querySelectorAll('.reactions-btn').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const reviewId = btn.dataset.reviewId;
+                    document.getElementById('likesList').innerHTML = '<li class="text-muted small">Loading...</li>';
+                    document.getElementById('dislikesList').innerHTML = '<li class="text-muted small">Loading...</li>';
+
+                    const res = await fetch(`/review/${reviewId}/reactions`);
+                    const data = await res.json();
+
+                    document.getElementById('likesList').innerHTML = data.likes.length
+                        ? data.likes.map(u => `<li><i class="fas fa-user me-1 text-muted"></i>${u}</li>`).join('')
+                        : '<li class="text-muted small">Nobody yet</li>';
+
+                    document.getElementById('dislikesList').innerHTML = data.dislikes.length
+                        ? data.dislikes.map(u => `<li><i class="fas fa-user me-1 text-muted"></i>${u}</li>`).join('')
+                        : '<li class="text-muted small">Nobody yet</li>';
+                });
+            });
     });
 </script>
+
+<!-- Reactions Modal -->
+<div class="modal fade" id="reactionsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-users me-2"></i>Reactions</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-6">
+                        <h6 class="text-success"><i class="fas fa-thumbs-up me-1"></i>Liked by</h6>
+                        <ul class="list-unstyled" id="likesList">
+                            <li class="text-muted small">Loading...</li>
+                        </ul>
+                    </div>
+                    <div class="col-6">
+                        <h6 class="text-danger"><i class="fas fa-thumbs-down me-1"></i>Disliked by</h6>
+                        <ul class="list-unstyled" id="dislikesList">
+                            <li class="text-muted small">Loading...</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection

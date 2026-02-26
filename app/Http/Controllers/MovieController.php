@@ -27,9 +27,17 @@ class MovieController extends Controller
         }
 
         $reviews = Review::where('movie_id', $id)
-            ->with('user')
+            ->with(['user', 'likes', 'dislikes', 'allReactions'])
             ->orderBy('created_at', 'desc')
             ->get();
+
+        $userReactions = [];
+        if (auth()->check()) {
+            $userReactions = \App\Models\ReviewLike::where('user_id', auth()->id())
+                ->whereIn('review_id', $reviews->pluck('review_id'))
+                ->pluck('type', 'review_id')
+                ->toArray();
+        }
 
         $ourAverageRating = $reviews->avg('rating');
         $ourReviewCount = $reviews->count();
@@ -55,13 +63,14 @@ class MovieController extends Controller
         }
 
         return view('movies.show', [
-            'movie' => $movie,
-            'reviews' => $reviews,
+            'movie'            => $movie,
+            'reviews'          => $reviews,
             'ourAverageRating' => $ourAverageRating,
-            'ourReviewCount' => $ourReviewCount,
-            'userReview' => $userReview,
-            'inWatchlist' => $inWatchlist,
-            'inWatched' => $inWatched,
+            'ourReviewCount'   => $ourReviewCount,
+            'userReview'       => $userReview,
+            'inWatchlist'      => $inWatchlist,
+            'inWatched'        => $inWatched,
+            'userReactions'    => $userReactions,
         ]);
     }
 
@@ -71,7 +80,7 @@ class MovieController extends Controller
     public function search(Request $request)
     {
         $query = $request->input('query');
-        
+
         if (empty($query)) {
             return redirect()->route('home');
         }
@@ -79,13 +88,13 @@ class MovieController extends Controller
         $results = $this->tmdb->searchMovies($query);
 
         return view('movies.search', [
-            'query' => $query,
-            'movies' => $results['results'] ?? [],
+            'query'        => $query,
+            'movies'       => $results['results'] ?? [],
             'totalResults' => $results['total_results'] ?? 0
         ]);
     }
 
-        /**
+    /**
      * Live search for movies - returns JSON
      */
     public function liveSearch(Request $request)
@@ -101,14 +110,14 @@ class MovieController extends Controller
 
         $formatted = array_map(function ($movie) {
             return [
-                'id' => $movie['id'],
-                'title' => $movie['title'],
-                'year' => isset($movie['release_date']) ? substr($movie['release_date'], 0, 4) : 'N/A',
+                'id'     => $movie['id'],
+                'title'  => $movie['title'],
+                'year'   => isset($movie['release_date']) ? substr($movie['release_date'], 0, 4) : 'N/A',
                 'poster' => $movie['poster_path']
                     ? 'https://image.tmdb.org/t/p/w92' . $movie['poster_path']
                     : null,
                 'rating' => number_format($movie['vote_average'] ?? 0, 1),
-                'url' => route('movie.show', $movie['id'])
+                'url'    => route('movie.show', $movie['id'])
             ];
         }, $movies);
 
