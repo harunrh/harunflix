@@ -38,6 +38,11 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item me-2">
+                        <a class="nav-link" href="{{ route('users.index') }}">
+                            <i class="fas fa-users me-1"></i>Members
+                        </a>
+                    </li>
+                    <li class="nav-item me-2">
                         <a class="nav-link theme-toggle" id="theme-toggle">
                             <i class="fas fa-sun"></i>
                         </a>

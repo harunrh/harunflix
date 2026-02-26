@@ -20,6 +20,8 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/movie/{id}', [MovieController::class, 'show'])->name('movie.show');
 Route::get('/search', [MovieController::class, 'search'])->name('movie.search');
 Route::get('/search/live', [MovieController::class, 'liveSearch'])->name('movie.live-search');
+Route::get('/users', [ProfileController::class, 'allUsers'])->name('users.index');
+Route::get('/users/{username}', [ProfileController::class, 'show'])->name('users.show');
 
 // Protected routes
 Route::middleware('auth')->group(function () {
