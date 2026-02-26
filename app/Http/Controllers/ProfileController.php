@@ -106,4 +106,57 @@ class ProfileController extends Controller
         arsort($genreCounts);
         return array_key_first($genreCounts);
     }
+
+    public function allUsers()
+    {
+        $users = \App\Models\User::withCount('reviews')
+            ->orderBy('reviews_count', 'desc')
+            ->paginate(20);
+
+        return view('users.index', compact('users'));
+    }
+
+    public function show($username)
+    {
+        $user = \App\Models\User::where('username', $username)->firstOrFail();
+
+        $reviews = Review::where('user_id', $user->user_id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $watchlist = Watchlist::where('user_id', $user->user_id)->get();
+
+        $watchedMovies = WatchedMovie::where('user_id', $user->user_id)->get();
+
+        $watchedMovieIds = $watchedMovies->pluck('movie_id')->toArray();
+
+        $reviewedAsWatched = $reviews->filter(function ($review) use ($watchedMovieIds) {
+            return !in_array($review->movie_id, $watchedMovieIds);
+        })->map(function ($review) {
+            return (object) [
+                'movie_id'    => $review->movie_id,
+                'movie_title' => $review->movie_title,
+                'poster_path' => $review->poster_path ?? null,
+                'created_at'  => $review->created_at,
+            ];
+        });
+
+        $allWatched = collect($watchedMovies->all())
+            ->concat($reviewedAsWatched)
+            ->sortByDesc('created_at')
+            ->values();
+
+        $averageRating = $reviews->count() > 0 ? round($reviews->avg('rating'), 1) : null;
+        $favouriteGenre = $this->getFavouriteGenre($reviews);
+
+        $stats = [
+            'review_count'    => $reviews->count(),
+            'average_rating'  => $averageRating,
+            'watchlist_count' => $watchlist->count(),
+            'watched_count'   => $allWatched->count(),
+            'favourite_genre' => $favouriteGenre,
+        ];
+
+        return view('users.show', compact('user', 'reviews', 'watchlist', 'allWatched', 'stats'));
+    }
 }
