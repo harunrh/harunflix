@@ -20,6 +20,7 @@ class HomeController extends Controller
         $topRatedMovies = $this->tmdb->getTopRatedMovies(1);
         $popularMovies = $this->tmdb->getPopularMovies(1);
         $trendingMovies = $this->tmdb->getTrendingMovies('week');
+        $genres = $this->tmdb->getGenres();
         
         // Get random posters for hero banner
         $heroPosters = $this->tmdb->getRandomPosters(14);
@@ -35,7 +36,8 @@ class HomeController extends Controller
             'popularMovies' => $popularMovies['results'] ?? [],
             'trendingMovies' => $trendingMovies['results'] ?? [],
             'heroPosters' => $heroPosters,
-            'recentReviews' => $recentReviews
+            'recentReviews' => $recentReviews,
+            'genres' => $genres
         ]);
     }
 }
