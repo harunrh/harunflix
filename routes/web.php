@@ -23,6 +23,8 @@ Route::get('/search', [MovieController::class, 'search'])->name('movie.search');
 Route::get('/search/live', [MovieController::class, 'liveSearch'])->name('movie.live-search');
 Route::get('/users', [ProfileController::class, 'allUsers'])->name('users.index');
 Route::get('/users/{username}', [ProfileController::class, 'show'])->name('users.show');
+Route::get('/genre/{id}', [MovieController::class, 'byGenre'])->name('movie.genre');
+Route::get('/movies', [MovieController::class, 'index'])->name('movies.index');
 
 // Protected routes
 Route::middleware('auth')->group(function () {

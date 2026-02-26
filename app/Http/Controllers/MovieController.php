@@ -123,4 +123,88 @@ class MovieController extends Controller
 
         return response()->json($formatted);
     }
+
+        public function byGenre(Request $request, $id)
+    {
+        $page = $request->get('page', 1);
+        $results = $this->tmdb->getMoviesByGenre($id, $page);
+        $genres = $this->tmdb->getGenres();
+        $genre = collect($genres)->firstWhere('id', (int)$id);
+
+        return view('movies.genre', [
+            'movies'      => $results['results'] ?? [],
+            'totalPages'  => $results['total_pages'] ?? 1,
+            'currentPage' => $page,
+            'genreId'     => $id,
+            'genreName'   => $genre['name'] ?? 'Unknown',
+            'genres'      => $genres,
+
+        ]);
+    }
+
+    public function index(Request $request)
+    {
+        $genreId = $request->get('genre');
+        $page = $request->get('page', 1);
+        $genres = $this->tmdb->getGenres();
+
+        // If filtering by genre, show grid view
+        if ($genreId) {
+            $results = $this->tmdb->getMoviesByGenre($genreId, $page);
+            $selectedGenre = collect($genres)->firstWhere('id', (int)$genreId);
+            $selectedGenreName = $selectedGenre['name'] ?? 'All Movies';
+
+            return view('movies.index', [
+                'genreView'         => true,
+                'movies'            => $results['results'] ?? [],
+                'totalPages'        => $results['total_pages'] ?? 1,
+                'currentPage'       => $page,
+                'genres'            => $genres,
+                'selectedGenreId'   => $genreId,
+                'selectedGenreName' => $selectedGenreName,
+            ]);
+        }
+
+        // Default: show categorised sections
+        $newReleases    = $this->tmdb->getNowPlayingMovies();
+        $popularMovies  = $this->tmdb->getPopularMovies(1);
+        $trendingMovies = $this->tmdb->getTrendingMovies('week');
+
+        // Top rated by HarunFlix users (min 2 reviews)
+        $topRatedByUsers = \App\Models\Review::select('movie_id', 'movie_title', 'poster_path')
+            ->selectRaw('AVG(rating) as avg_rating, COUNT(*) as review_count')
+            ->groupBy('movie_id', 'movie_title', 'poster_path')
+            ->having('review_count', '>=', 1)
+            ->orderByDesc('avg_rating')
+            ->limit(15)
+            ->get();
+
+        // Most reviewed on HarunFlix
+        $mostReviewed = \App\Models\Review::select('movie_id', 'movie_title', 'poster_path')
+            ->selectRaw('COUNT(*) as review_count, AVG(rating) as avg_rating')
+            ->groupBy('movie_id', 'movie_title', 'poster_path')
+            ->orderByDesc('review_count')
+            ->limit(15)
+            ->get();
+
+        // Recently rated on HarunFlix
+        $recentlyRated = \App\Models\Review::select('movie_id', 'movie_title', 'poster_path', 'rating', 'created_at')
+            ->orderByDesc('created_at')
+            ->limit(15)
+            ->get()
+            ->unique('movie_id')
+            ->values();
+
+        return view('movies.index', [
+            'genreView'      => false,
+            'genres'         => $genres,
+            'selectedGenreId'=> null,
+            'newReleases'    => $newReleases['results'] ?? [],
+            'popularMovies'  => $popularMovies['results'] ?? [],
+            'trendingMovies' => $trendingMovies['results'] ?? [],
+            'topRatedByUsers'=> $topRatedByUsers,
+            'mostReviewed'   => $mostReviewed,
+            'recentlyRated'  => $recentlyRated,
+        ]);
+    }
 }

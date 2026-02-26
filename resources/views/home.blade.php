@@ -70,6 +70,7 @@
     </div>
 </div>
 
+
 <!-- Top Rated Movies Section -->
 <div class="content-row">
     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -77,12 +78,10 @@
     </div>
     
     <div class="position-relative">
-        <!-- Left Control Arrow -->
         <button class="card-slider-control-prev d-none d-md-block" aria-label="Previous">
             <i class="fas fa-chevron-left fa-2x"></i>
         </button>
         
-        <!-- Card Slider -->
         <div class="card-slider">
             @foreach($topRatedMovies as $movie)
             <div class="movie-card-container">
@@ -108,7 +107,6 @@
             @endforeach
         </div>
         
-        <!-- Right Control Arrow -->
         <button class="card-slider-control-next d-none d-md-block" aria-label="Next">
             <i class="fas fa-chevron-right fa-2x"></i>
         </button>

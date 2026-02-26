@@ -38,6 +38,11 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item me-2">
+                        <a class="nav-link" href="{{ route('movies.index') }}">
+                            <i class="fas fa-film me-1"></i>Movies
+                        </a>
+                    </li>
+                    <li class="nav-item me-2">
                         <a class="nav-link" href="{{ route('users.index') }}">
                             <i class="fas fa-users me-1"></i>Members
                         </a>
@@ -47,24 +52,24 @@
                             <i class="fas fa-sun"></i>
                         </a>
                     </li>
-                        @auth
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-                                    <i class="fas fa-user-circle me-1"></i>{{ Auth::user()->username }}
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-end">
-                                    <li><a class="dropdown-item" href="{{ route('profile') }}"><i class="fas fa-user me-2"></i>My Profile</a></li>
-                                    <li><a class="dropdown-item" href="{{ route('reviews.my') }}"><i class="fas fa-star me-2"></i>My Reviews</a></li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li>
-                                        <form action="{{ route('logout') }}" method="POST">
-                                            @csrf
-                                            <button type="submit" class="dropdown-item"><i class="fas fa-sign-out-alt me-2"></i>Logout</button>
-                                        </form>
-                                    </li>
-                                </ul>
-                            </li>
-                        @endauth
+                    @auth
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-user-circle me-1"></i>{{ Auth::user()->username }}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="{{ route('profile') }}"><i class="fas fa-user me-2"></i>My Profile</a></li>
+                                <li><a class="dropdown-item" href="{{ route('reviews.my') }}"><i class="fas fa-star me-2"></i>My Reviews</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <form action="{{ route('logout') }}" method="POST">
+                                        @csrf
+                                        <button type="submit" class="dropdown-item"><i class="fas fa-sign-out-alt me-2"></i>Logout</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </li>
+                    @endauth
                 </ul>
             </div>
         </div>
@@ -74,72 +79,69 @@
         @yield('content')
     </main>
 
-    <!-- Bootstrap & jQuery JS -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
-        <script>
-            document.addEventListener('DOMContentLoaded', () => {
-                const toggle = document.getElementById('theme-toggle');
-                const icon = toggle.querySelector('i');
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggle = document.getElementById('theme-toggle');
+            const icon = toggle.querySelector('i');
 
-                const savedTheme = localStorage.getItem('theme');
-                if (savedTheme === 'light') {
-                    document.body.classList.add('light-theme');
-                    icon.classList.replace('fa-sun', 'fa-moon');
-                }
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'light') {
+                document.body.classList.add('light-theme');
+                icon.classList.replace('fa-sun', 'fa-moon');
+            }
 
-                toggle.addEventListener('click', () => {
-                    document.body.classList.toggle('light-theme');
-                    const isLight = document.body.classList.contains('light-theme');
-                    localStorage.setItem('theme', isLight ? 'light' : 'dark');
-                    icon.classList.replace(isLight ? 'fa-sun' : 'fa-moon', isLight ? 'fa-moon' : 'fa-sun');
-                });
+            toggle.addEventListener('click', () => {
+                document.body.classList.toggle('light-theme');
+                const isLight = document.body.classList.contains('light-theme');
+                localStorage.setItem('theme', isLight ? 'light' : 'dark');
+                icon.classList.replace(isLight ? 'fa-sun' : 'fa-moon', isLight ? 'fa-moon' : 'fa-sun');
             });
-        </script>
+        });
+    </script>
 
-        <!-- Toast Notifications -->
-        <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 9999">
-            <div id="appToast" class="toast align-items-center text-white border-0" role="alert">
-                <div class="d-flex">
-                    <div class="toast-body" id="toastMessage"></div>
-                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-                </div>
+    <!-- Toast Notifications -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 9999">
+        <div id="appToast" class="toast align-items-center text-white border-0" role="alert">
+            <div class="d-flex">
+                <div class="toast-body" id="toastMessage"></div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
             </div>
         </div>
+    </div>
 
-        <script>
-        function showToast(message, type = 'success') {
-            const toast = document.getElementById('appToast');
-            const toastMessage = document.getElementById('toastMessage');
-            
-            toastMessage.textContent = message;
-            
-            // Reset classes
-            toast.className = 'toast align-items-center text-white border-0';
-            
-            if (type === 'success') {
-                toast.classList.add('bg-success');
-            } else if (type === 'error') {
-                toast.classList.add('bg-danger');
-            } else if (type === 'info') {
-                toast.classList.add('bg-primary');
-            }
-            
-            const bsToast = new bootstrap.Toast(toast, { delay: 3000 });
-            bsToast.show();
+    <script>
+    function showToast(message, type = 'success') {
+        const toast = document.getElementById('appToast');
+        const toastMessage = document.getElementById('toastMessage');
+        
+        toastMessage.textContent = message;
+        
+        toast.className = 'toast align-items-center text-white border-0';
+        
+        if (type === 'success') {
+            toast.classList.add('bg-success');
+        } else if (type === 'error') {
+            toast.classList.add('bg-danger');
+        } else if (type === 'info') {
+            toast.classList.add('bg-primary');
         }
+        
+        const bsToast = new bootstrap.Toast(toast, { delay: 3000 });
+        bsToast.show();
+    }
 
-        // Auto-fire if Laravel flashed a message
-        document.addEventListener('DOMContentLoaded', function () {
-            @if(session('success'))
-                showToast("{{ session('success') }}", 'success');
-            @elseif(session('error'))
-                showToast("{{ session('error') }}", 'error');
-            @elseif(session('info'))
-                showToast("{{ session('info') }}", 'info');
-            @endif
-        });
-        </script>
+    document.addEventListener('DOMContentLoaded', function () {
+        @if(session('success'))
+            showToast("{{ session('success') }}", 'success');
+        @elseif(session('error'))
+            showToast("{{ session('error') }}", 'error');
+        @elseif(session('info'))
+            showToast("{{ session('info') }}", 'info');
+        @endif
+    });
+    </script>
 
-    </body>
+</body>
 </html>

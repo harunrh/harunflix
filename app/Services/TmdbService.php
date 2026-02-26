@@ -158,4 +158,48 @@ class TmdbService
             return $posters;
         });
     }
+
+        /**
+     * Get all movie genres
+     */
+    public function getGenres()
+    {
+        return Cache::remember('movie_genres', 86400, function () {
+            $response = Http::get("{$this->baseUrl}/genre/movie/list", [
+                'api_key' => $this->apiKey
+            ]);
+            return $response->json()['genres'] ?? [];
+        });
+    }
+
+    /**
+     * Discover movies by genre
+     */
+    public function getMoviesByGenre($genreId, $page = 1)
+    {
+        try {
+            $response = Http::get("{$this->baseUrl}/discover/movie", [
+                'api_key'      => $this->apiKey,
+                'with_genres'  => $genreId,
+                'sort_by'      => 'popularity.desc',
+                'page'         => $page
+            ]);
+            return $response->json();
+        } catch (\Exception $e) {
+            return ['results' => []];
+        }
+    }
+
+    public function getNowPlayingMovies($page = 1)
+    {
+        try {
+            $response = Http::get("{$this->baseUrl}/movie/now_playing", [
+                'api_key' => $this->apiKey,
+                'page'    => $page
+            ]);
+            return $response->json();
+        } catch (\Exception $e) {
+            return ['results' => []];
+        }
+    }
 }
