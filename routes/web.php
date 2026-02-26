@@ -7,6 +7,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\WatchlistController;
+use App\Http\Controllers\ReviewLikeController;
 
 // Auth routes
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -33,4 +34,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/watchlist/remove/{movieId}', [WatchlistController::class, 'removeFromWatchlist'])->name('watchlist.remove');
     Route::post('/watched/add', [WatchlistController::class, 'markAsWatched'])->name('watched.add');
     Route::delete('/watched/remove/{movieId}', [WatchlistController::class, 'removeFromWatched'])->name('watched.remove');
+    Route::post('/review/{id}/react', [ReviewLikeController::class, 'react'])->name('review.react');
+    Route::get('/review/{id}/reactions', [ReviewLikeController::class, 'reactions'])->name('review.reactions');
 });
