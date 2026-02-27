@@ -22,9 +22,11 @@
                     </span>
                     
                     @if($ourReviewCount > 0)
-                    <span class="badge bg-primary me-2 mb-1">
+                    <span class="badge bg-primary me-2 mb-1" id="harunflixRatingBadge">
                         <i class="fas fa-star"></i> {{ number_format($ourAverageRating, 1) }}/10 HarunFlix ({{ $ourReviewCount }} reviews)
                     </span>
+                    @else
+                    <span class="badge bg-primary me-2 mb-1 d-none" id="harunflixRatingBadge"></span>
                     @endif
                     
                     <span class="text-light me-3 mb-1">{{ $movie['release_date'] ?? 'N/A' }}</span>
@@ -45,10 +47,10 @@
                 @endif
                 
                 <!-- Action Buttons -->
-                <div class="d-flex gap-2 flex-wrap">
+                <div class="d-flex gap-2 flex-wrap" id="actionButtons">
                     @auth
                         @if(!$userReview)
-                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#reviewModal">
+                            <button class="btn btn-primary" id="writeReviewBtn" data-bs-toggle="modal" data-bs-target="#reviewModal">
                                 <i class="fas fa-star me-1"></i>Write a Review
                             </button>
                         @else
@@ -101,7 +103,6 @@
         <button class="card-slider-control-prev d-none d-md-block" aria-label="Previous">
             <i class="fas fa-chevron-left fa-2x"></i>
         </button>
-        
         <div class="card-slider">
             @foreach(array_slice($movie['credits']['cast'], 0, 15) as $cast)
             <div class="movie-card-container">
@@ -124,7 +125,6 @@
             </div>
             @endforeach
         </div>
-        
         <button class="card-slider-control-next d-none d-md-block" aria-label="Next">
             <i class="fas fa-chevron-right fa-2x"></i>
         </button>
@@ -134,15 +134,14 @@
 
 <!-- Reviews and Stats Section -->
 <div class="row">
-    <!-- Reviews Section -->
     <div class="col-md-8">
         <div class="card">
             <div class="card-header">
                 <h5 class="mb-0"><i class="fas fa-comments me-2"></i>User Reviews</h5>
             </div>
-            <div class="card-body p-0">
+            <div class="card-body p-0" id="reviewsContainer">
                 @if($reviews->count() > 0)
-                <div class="list-group list-group-flush">
+                <div class="list-group list-group-flush" id="reviewsList">
                     @foreach($reviews as $review)
                     <div class="list-group-item p-3">
                         <div class="d-flex">
@@ -150,64 +149,58 @@
                                 style="width: 50px; height: 50px; font-size: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
                                 {{ strtoupper(substr($review->user->username, 0, 1)) }}
                             </div>
-                            
                             <div class="flex-grow-1">
                                 <div class="d-flex justify-content-between mb-2 flex-wrap">
                                     <div>
                                         <strong>{{ $review->user->username }}</strong>
                                         <span class="badge bg-primary ms-2">{{ number_format($review->rating, 1) }}/10</span>
-                                        
                                         @if(auth()->check() && auth()->id() === $review->user_id)
                                         <span class="badge bg-success ms-1">Your Review</span>
                                         @endif
                                     </div>
-                            <div class="d-flex align-items-center gap-2 flex-wrap">
-                                <small class="text-muted">{{ $review->created_at->format('M d, Y') }}</small>
-
-                                @auth
-                                <button class="btn btn-sm btn-outline-success like-btn"
-                                    data-review-id="{{ $review->review_id }}"
-                                    data-type="like"
-                                    style="{{ isset($userReactions[$review->review_id]) && $userReactions[$review->review_id] === 'like' ? 'background-color: #198754; color: white;' : '' }}">
-                                    <i class="fas fa-thumbs-up me-1"></i>
-                                    <span class="like-count">{{ $review->likes->count() }}</span>
-                                </button>
-                                <button class="btn btn-sm btn-outline-danger dislike-btn"
-                                    data-review-id="{{ $review->review_id }}"
-                                    data-type="dislike"
-                                    style="{{ isset($userReactions[$review->review_id]) && $userReactions[$review->review_id] === 'dislike' ? 'background-color: #dc3545; color: white;' : '' }}">
-                                    <i class="fas fa-thumbs-down me-1"></i>
-                                    <span class="dislike-count">{{ $review->dislikes->count() }}</span>
-                                </button>
-                                <button class="btn btn-sm btn-outline-secondary reactions-btn"
-                                    data-review-id="{{ $review->review_id }}"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#reactionsModal">
-                                    <i class="fas fa-users me-1"></i>
-                                </button>
-                                @endauth
-
-                                @if(auth()->check() && auth()->id() === $review->user_id)
-                                <form action="{{ route('review.destroy', $review->review_id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this review?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-outline-danger">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
-                                @endif
-                            </div>
+                                    <div class="d-flex align-items-center gap-2 flex-wrap">
+                                        <small class="text-muted">{{ $review->created_at->format('M d, Y') }}</small>
+                                        @auth
+                                        <button class="btn btn-sm btn-outline-success like-btn"
+                                            data-review-id="{{ $review->review_id }}"
+                                            data-type="like"
+                                            style="{{ isset($userReactions[$review->review_id]) && $userReactions[$review->review_id] === 'like' ? 'background-color: #198754; color: white;' : '' }}">
+                                            <i class="fas fa-thumbs-up me-1"></i>
+                                            <span class="like-count">{{ $review->likes->count() }}</span>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-danger dislike-btn"
+                                            data-review-id="{{ $review->review_id }}"
+                                            data-type="dislike"
+                                            style="{{ isset($userReactions[$review->review_id]) && $userReactions[$review->review_id] === 'dislike' ? 'background-color: #dc3545; color: white;' : '' }}">
+                                            <i class="fas fa-thumbs-down me-1"></i>
+                                            <span class="dislike-count">{{ $review->dislikes->count() }}</span>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-secondary reactions-btn"
+                                            data-review-id="{{ $review->review_id }}"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#reactionsModal">
+                                            <i class="fas fa-users me-1"></i>
+                                        </button>
+                                        @endauth
+                                        @if(auth()->check() && auth()->id() === $review->user_id)
+                                        <form action="{{ route('review.destroy', $review->review_id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this review?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                        @endif
+                                    </div>
                                 </div>
-                                <p class="mb-0 text-light">
-                                    {{ $review->review_text ?: 'No written review' }}
-                                </p>
+                                <p class="mb-0 text-light">{{ $review->review_text ?: 'No written review' }}</p>
                             </div>
                         </div>
                     </div>
                     @endforeach
                 </div>
                 @else
-                <div class="text-center py-5">
+                <div class="text-center py-5" id="noReviewsMsg">
                     <i class="fas fa-comment-slash fa-3x text-muted mb-3"></i>
                     <p class="text-muted">No reviews yet. Be the first to review!</p>
                 </div>
@@ -216,7 +209,6 @@
         </div>
     </div>
     
-    <!-- Movie Stats Sidebar -->
     <div class="col-md-4">
         <div class="card">
             <div class="card-header">
@@ -247,19 +239,17 @@
                         <span>{{ number_format($movie['vote_count']) }}</span>
                     </li>
                     @endif
-                    @if($ourReviewCount > 0)
-                    <li class="list-group-item d-flex justify-content-between">
+                    <li class="list-group-item d-flex justify-content-between" id="harunflixRatingRow" @if($ourReviewCount == 0) style="display:none" @endif>
                         <span>HarunFlix Rating</span>
-                        <span class="d-flex align-items-center">
-                            {{ number_format($ourAverageRating, 1) }}
+                        <span class="d-flex align-items-center" id="harunflixRatingValue">
+                            {{ number_format($ourAverageRating ?? 0, 1) }}
                             <i class="fas fa-star text-primary ms-1"></i>
                         </span>
                     </li>
-                    <li class="list-group-item d-flex justify-content-between">
+                    <li class="list-group-item d-flex justify-content-between" id="harunflixReviewCountRow" @if($ourReviewCount == 0) style="display:none" @endif>
                         <span>HarunFlix Reviews</span>
-                        <span>{{ $ourReviewCount }}</span>
+                        <span id="harunflixReviewCount">{{ $ourReviewCount }}</span>
                     </li>
-                    @endif
                 </ul>
             </div>
         </div>
@@ -275,43 +265,31 @@
                 <h5 class="modal-title">Review {{ $movie['title'] }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{{ route('review.store') }}" method="POST">
+            <form id="reviewForm">
                 @csrf
                 <input type="hidden" name="movie_id" value="{{ $movie['id'] }}">
                 <input type="hidden" name="movie_title" value="{{ $movie['title'] }}">
                 <input type="hidden" name="poster_path" value="{{ $movie['poster_path'] ?? '' }}">
                 <input type="hidden" name="release_year" value="{{ isset($movie['release_date']) ? substr($movie['release_date'], 0, 4) : '' }}">
-                
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="rating" class="form-label">Your Rating (0-10):</label>
                         <div class="rating-input-container">
-                            <input type="number" 
-                                   class="form-control rating-input" 
-                                   id="rating" 
-                                   name="rating" 
-                                   min="0" 
-                                   max="10" 
-                                   step="0.5" 
-                                   value="{{ $userReview->rating ?? 8.0 }}" 
-                                   required>
+                            <input type="number" class="form-control rating-input" id="rating" name="rating"
+                                   min="0" max="10" step="0.5" value="{{ $userReview->rating ?? 8.0 }}" required>
                             <span class="rating-suffix">/10</span>
                         </div>
                         <small class="text-muted">Ratings can be from 0 to 10 in steps of 0.5</small>
                     </div>
-                    
                     <div class="mb-3">
                         <label for="review_text" class="form-label">Your Review:</label>
-                        <textarea class="form-control" 
-                                  id="review_text" 
-                                  name="review_text" 
-                                  rows="4" 
+                        <textarea class="form-control" id="review_text" name="review_text" rows="4"
                                   placeholder="Write your thoughts about the movie...">{{ $userReview->review_text ?? '' }}</textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Submit Review</button>
+                    <button type="submit" class="btn btn-primary" id="reviewSubmitBtn">Submit Review</button>
                 </div>
             </form>
         </div>
@@ -328,7 +306,6 @@
                 slider.scrollBy({ left: -600, behavior: 'smooth' });
             });
         });
-
         document.querySelectorAll('.card-slider-control-next').forEach(button => {
             button.addEventListener('click', () => {
                 const slider = button.closest('.content-row').querySelector('.card-slider');
@@ -344,27 +321,13 @@
                 const movieTitle = watchlistBtn.dataset.movieTitle;
                 const poster = watchlistBtn.dataset.poster;
                 const inWatchlist = watchlistBtn.dataset.inWatchlist === 'true';
-
-                const url = inWatchlist
-                    ? `/watchlist/remove/${movieId}`
-                    : '/watchlist/add';
-
+                const url = inWatchlist ? `/watchlist/remove/${movieId}` : '/watchlist/add';
                 const options = inWatchlist
-                    ? {
-                        method: 'DELETE',
-                        headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Content-Type': 'application/json' }
-                      }
-                    : {
-                        method: 'POST',
-                        headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ movie_id: movieId, movie_title: movieTitle, poster_path: poster })
-                      };
-
+                    ? { method: 'DELETE', headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Content-Type': 'application/json' } }
+                    : { method: 'POST', headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Content-Type': 'application/json' }, body: JSON.stringify({ movie_id: movieId, movie_title: movieTitle, poster_path: poster }) };
                 const res = await fetch(url, options);
                 const data = await res.json();
-
                 showToast(data.message, 'success');
-
                 watchlistBtn.dataset.inWatchlist = inWatchlist ? 'false' : 'true';
                 watchlistBtn.classList.toggle('btn-warning');
                 watchlistBtn.classList.toggle('btn-outline-warning');
@@ -381,27 +344,13 @@
                 const runtime = watchedBtn.dataset.runtime;
                 const poster = watchedBtn.dataset.poster;
                 const inWatched = watchedBtn.dataset.inWatched === 'true';
-
-                const url = inWatched
-                    ? `/watched/remove/${movieId}`
-                    : '/watched/add';
-
+                const url = inWatched ? `/watched/remove/${movieId}` : '/watched/add';
                 const options = inWatched
-                    ? {
-                        method: 'DELETE',
-                        headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Content-Type': 'application/json' }
-                      }
-                    : {
-                        method: 'POST',
-                        headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ movie_id: movieId, movie_title: movieTitle, runtime: runtime, poster_path: poster })
-                      };
-
+                    ? { method: 'DELETE', headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Content-Type': 'application/json' } }
+                    : { method: 'POST', headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Content-Type': 'application/json' }, body: JSON.stringify({ movie_id: movieId, movie_title: movieTitle, runtime: runtime, poster_path: poster }) };
                 const res = await fetch(url, options);
                 const data = await res.json();
-
                 showToast(data.message, 'success');
-
                 watchedBtn.dataset.inWatched = inWatched ? 'false' : 'true';
                 watchedBtn.classList.toggle('btn-info');
                 watchedBtn.classList.toggle('btn-outline-info');
@@ -409,56 +358,122 @@
             });
         }
 
-             // Like/dislike buttons
-            document.querySelectorAll('.like-btn, .dislike-btn').forEach(btn => {
-                btn.addEventListener('click', async () => {
-                    const reviewId = btn.dataset.reviewId;
-                    const type = btn.dataset.type;
-
-                    const res = await fetch(`/review/${reviewId}/react`, {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ type })
-                    });
-
-                    const data = await res.json();
-
-                    const card = btn.closest('.list-group-item');
-                    const likeBtn = card.querySelector('.like-btn');
-                    const dislikeBtn = card.querySelector('.dislike-btn');
-
-                    likeBtn.querySelector('.like-count').textContent = data.likes;
-                    dislikeBtn.querySelector('.dislike-count').textContent = data.dislikes;
-
-                    likeBtn.style.backgroundColor = data.userReaction === 'like' ? '#198754' : '';
-                    likeBtn.style.color = data.userReaction === 'like' ? 'white' : '';
-                    dislikeBtn.style.backgroundColor = data.userReaction === 'dislike' ? '#dc3545' : '';
-                    dislikeBtn.style.color = data.userReaction === 'dislike' ? 'white' : '';
+        // Like/dislike buttons
+        document.querySelectorAll('.like-btn, .dislike-btn').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const reviewId = btn.dataset.reviewId;
+                const type = btn.dataset.type;
+                const res = await fetch(`/review/${reviewId}/react`, {
+                    method: 'POST',
+                    headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ type })
                 });
+                const data = await res.json();
+                const card = btn.closest('.list-group-item');
+                const likeBtn = card.querySelector('.like-btn');
+                const dislikeBtn = card.querySelector('.dislike-btn');
+                likeBtn.querySelector('.like-count').textContent = data.likes;
+                dislikeBtn.querySelector('.dislike-count').textContent = data.dislikes;
+                likeBtn.style.backgroundColor = data.userReaction === 'like' ? '#198754' : '';
+                likeBtn.style.color = data.userReaction === 'like' ? 'white' : '';
+                dislikeBtn.style.backgroundColor = data.userReaction === 'dislike' ? '#dc3545' : '';
+                dislikeBtn.style.color = data.userReaction === 'dislike' ? 'white' : '';
             });
+        });
 
-            // Reactions modal
-            document.querySelectorAll('.reactions-btn').forEach(btn => {
-                btn.addEventListener('click', async () => {
-                    const reviewId = btn.dataset.reviewId;
-                    document.getElementById('likesList').innerHTML = '<li class="text-muted small">Loading...</li>';
-                    document.getElementById('dislikesList').innerHTML = '<li class="text-muted small">Loading...</li>';
+        // Reactions modal
+        document.querySelectorAll('.reactions-btn').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const reviewId = btn.dataset.reviewId;
+                document.getElementById('likesList').innerHTML = '<li class="text-muted small">Loading...</li>';
+                document.getElementById('dislikesList').innerHTML = '<li class="text-muted small">Loading...</li>';
+                const res = await fetch(`/review/${reviewId}/reactions`);
+                const data = await res.json();
+                document.getElementById('likesList').innerHTML = data.likes.length
+                    ? data.likes.map(u => `<li><i class="fas fa-user me-1 text-muted"></i>${u}</li>`).join('')
+                    : '<li class="text-muted small">Nobody yet</li>';
+                document.getElementById('dislikesList').innerHTML = data.dislikes.length
+                    ? data.dislikes.map(u => `<li><i class="fas fa-user me-1 text-muted"></i>${u}</li>`).join('')
+                    : '<li class="text-muted small">Nobody yet</li>';
+            });
+        });
 
-                    const res = await fetch(`/review/${reviewId}/reactions`);
-                    const data = await res.json();
+        // Async review submission
+        const reviewForm = document.getElementById('reviewForm');
+        if (reviewForm) {
+            reviewForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const submitBtn = document.getElementById('reviewSubmitBtn');
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Submitting...';
 
-                    document.getElementById('likesList').innerHTML = data.likes.length
-                        ? data.likes.map(u => `<li><i class="fas fa-user me-1 text-muted"></i>${u}</li>`).join('')
-                        : '<li class="text-muted small">Nobody yet</li>';
-
-                    document.getElementById('dislikesList').innerHTML = data.dislikes.length
-                        ? data.dislikes.map(u => `<li><i class="fas fa-user me-1 text-muted"></i>${u}</li>`).join('')
-                        : '<li class="text-muted small">Nobody yet</li>';
+                const res = await fetch('{{ route("review.store") }}', {
+                    method: 'POST',
+                    headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                    body: new FormData(reviewForm)
                 });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    showToast(data.message, 'success');
+                    bootstrap.Modal.getInstance(document.getElementById('reviewModal')).hide();
+
+                    const noReviewsMsg = document.getElementById('noReviewsMsg');
+                    if (noReviewsMsg) noReviewsMsg.remove();
+
+                    const newReview = `
+                        <div class="list-group-item p-3">
+                            <div class="d-flex">
+                                <div class="avatar rounded-circle text-white d-flex align-items-center justify-content-center me-3"
+                                    style="width: 50px; height: 50px; font-size: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                                    {{ strtoupper(substr(auth()->user()->username, 0, 1)) }}
+                                </div>
+                                <div class="flex-grow-1">
+                                    <div class="d-flex justify-content-between mb-2 flex-wrap">
+                                        <div>
+                                            <strong>{{ auth()->user()->username }}</strong>
+                                            <span class="badge bg-primary ms-2">${parseFloat(data.review.rating).toFixed(1)}/10</span>
+                                            <span class="badge bg-success ms-1">Your Review</span>
+                                        </div>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <small class="text-muted">Just now</small>
+                                        </div>
+                                    </div>
+                                    <p class="mb-0 text-light">${data.review.review_text || 'No written review'}</p>
+                                </div>
+                            </div>
+                        </div>`;
+
+                    let reviewsList = document.getElementById('reviewsList');
+                    if (!reviewsList) {
+                        document.getElementById('reviewsContainer').innerHTML = '<div class="list-group list-group-flush" id="reviewsList"></div>';
+                        reviewsList = document.getElementById('reviewsList');
+                    }
+                    reviewsList.insertAdjacentHTML('afterbegin', newReview);
+
+                    // Update sidebar
+                    const countEl = document.getElementById('harunflixReviewCount');
+                    const ratingEl = document.getElementById('harunflixRatingValue');
+                    const ratingRow = document.getElementById('harunflixRatingRow');
+                    const countRow = document.getElementById('harunflixReviewCountRow');
+                    if (countEl) countEl.textContent = data.new_count;
+                    if (ratingEl) ratingEl.innerHTML = `${parseFloat(data.new_average).toFixed(1)} <i class="fas fa-star text-primary ms-1"></i>`;
+                    if (ratingRow) ratingRow.style.display = '';
+                    if (countRow) countRow.style.display = '';
+
+                    // Update button
+                    const writeBtn = document.getElementById('writeReviewBtn');
+                    if (writeBtn) {
+                        writeBtn.outerHTML = `<button class="btn btn-success" disabled><i class="fas fa-check me-1"></i>You've Reviewed This</button>`;
+                    }
+                } else {
+                    showToast(data.message || 'Something went wrong', 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Submit Review';
+                }
             });
+        }
     });
 </script>
 
