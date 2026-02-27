@@ -10,38 +10,48 @@ class ReviewController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'movie_id' => 'required|integer',
+            'movie_id'    => 'required|integer',
             'movie_title' => 'required|string|max:255',
             'poster_path' => 'nullable|string',
-            'release_year' => 'nullable|string|max:4',
-            'rating' => 'required|numeric|min:0|max:10',
+            'release_year'=> 'nullable|string|max:4',
+            'rating'      => 'required|numeric|min:0|max:10',
             'review_text' => 'nullable|string|max:1000'
         ]);
 
         $reviewData = [
-            'user_id' => auth()->id(),
-            'movie_id' => $validated['movie_id'],
-            'movie_title' => $validated['movie_title'],
-            'poster_path' => $validated['poster_path'] ?? null,
+            'user_id'      => auth()->id(),
+            'movie_id'     => $validated['movie_id'],
+            'movie_title'  => $validated['movie_title'],
+            'poster_path'  => $validated['poster_path'] ?? null,
             'release_year' => $validated['release_year'] ?? null,
-            'rating' => $validated['rating'],
-            'review_text' => $validated['review_text']
+            'rating'       => $validated['rating'],
+            'review_text'  => $validated['review_text']
         ];
 
-        // Check if user already reviewed this movie
         $existingReview = Review::where('movie_id', $validated['movie_id'])
                                 ->where('user_id', auth()->id())
                                 ->first();
 
         if ($existingReview) {
             $existingReview->update($reviewData);
-            return redirect()->route('movie.show', $validated['movie_id'])
-                           ->with('success', 'Review updated successfully!');
+            $review = $existingReview;
+            $message = 'Review updated successfully!';
         } else {
-            Review::create($reviewData);
-            return redirect()->route('movie.show', $validated['movie_id'])
-                           ->with('success', 'Review added successfully!');
+            $review = Review::create($reviewData);
+            $message = 'Review added successfully!';
         }
+
+        // Calculate new average and count for the movie
+        $newCount   = Review::where('movie_id', $validated['movie_id'])->count();
+        $newAverage = Review::where('movie_id', $validated['movie_id'])->avg('rating');
+
+        return response()->json([
+            'success'     => true,
+            'message'     => $message,
+            'review'      => $review,
+            'new_count'   => $newCount,
+            'new_average' => round($newAverage, 1)
+        ]);
     }
 
     public function destroy($id)
