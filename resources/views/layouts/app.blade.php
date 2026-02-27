@@ -29,24 +29,46 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
         <div class="container">
+            <!-- Logo -->
             <a class="navbar-brand" href="{{ route('home') }}">
                 <img src="{{ asset('images/harunflix.png') }}" alt="HarunFlix Logo">
             </a>
+
+            <!-- Left side nav links (next to logo) -->
+            <ul class="navbar-nav me-auto d-none d-lg-flex">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('movies.index') }}">
+                        <i class="fas fa-film me-1"></i>Movies
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('users.index') }}">
+                        <i class="fas fa-users me-1"></i>Members
+                    </a>
+                </li>
+            </ul>
+
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
+
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item me-2">
+                <!-- Mobile only left links -->
+                <ul class="navbar-nav me-auto d-lg-none">
+                    <li class="nav-item">
                         <a class="nav-link" href="{{ route('movies.index') }}">
                             <i class="fas fa-film me-1"></i>Movies
                         </a>
                     </li>
-                    <li class="nav-item me-2">
+                    <li class="nav-item">
                         <a class="nav-link" href="{{ route('users.index') }}">
                             <i class="fas fa-users me-1"></i>Members
                         </a>
                     </li>
+                </ul>
+
+                <!-- Right side -->
+                <ul class="navbar-nav ms-auto">
                     <li class="nav-item me-2">
                         <a class="nav-link theme-toggle" id="theme-toggle">
                             <i class="fas fa-sun"></i>
@@ -69,6 +91,17 @@
                                 </li>
                             </ul>
                         </li>
+                    @else
+                        <li class="nav-item me-1">
+                            <a class="nav-link" href="{{ route('login') }}">
+                                <i class="fas fa-sign-in-alt me-1"></i>Login
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('register') }}">
+                                <i class="fas fa-user-plus me-1"></i>Register
+                            </a>
+                        </li>
                     @endauth
                 </ul>
             </div>
@@ -79,6 +112,7 @@
         @yield('content')
     </main>
 
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
