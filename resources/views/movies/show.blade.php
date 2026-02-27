@@ -145,8 +145,7 @@
                     @foreach($reviews as $review)
                     <div class="list-group-item p-3">
                         <div class="d-flex">
-                            <div class="avatar rounded-circle text-white d-flex align-items-center justify-content-center me-3" 
-                                style="width: 50px; height: 50px; font-size: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                            <div class="letter-avatar me-3" style="width: 50px; height: 50px; font-size: 20px;">
                                 {{ strtoupper(substr($review->user->username, 0, 1)) }}
                             </div>
                             <div class="flex-grow-1">
@@ -425,8 +424,7 @@
                     const newReview = `
                         <div class="list-group-item p-3">
                             <div class="d-flex">
-                                <div class="avatar rounded-circle text-white d-flex align-items-center justify-content-center me-3"
-                                    style="width: 50px; height: 50px; font-size: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                                <div class="letter-avatar me-3" style="width: 50px; height: 50px; font-size: 20px;">
                                     {{ strtoupper(substr(auth()->user()->username, 0, 1)) }}
                                 </div>
                                 <div class="flex-grow-1">
@@ -452,7 +450,6 @@
                     }
                     reviewsList.insertAdjacentHTML('afterbegin', newReview);
 
-                    // Update sidebar
                     const countEl = document.getElementById('harunflixReviewCount');
                     const ratingEl = document.getElementById('harunflixRatingValue');
                     const ratingRow = document.getElementById('harunflixRatingRow');
@@ -462,7 +459,6 @@
                     if (ratingRow) ratingRow.style.display = '';
                     if (countRow) countRow.style.display = '';
 
-                    // Update button
                     const writeBtn = document.getElementById('writeReviewBtn');
                     if (writeBtn) {
                         writeBtn.outerHTML = `<button class="btn btn-success" disabled><i class="fas fa-check me-1"></i>You've Reviewed This</button>`;

@@ -5,8 +5,7 @@
     <!-- Left Column - User Info & Stats -->
     <div class="col-md-4 mb-4">
         <div class="card text-center p-4">
-            <div class="avatar rounded-circle text-white d-flex align-items-center justify-content-center mx-auto mb-3" 
-                style="width: 100px; height: 100px; font-size: 40px; background: linear-gradient(135deg, #e50914, #b81d24);">
+            <div class="letter-avatar mx-auto mb-3" style="width: 100px; height: 100px; font-size: 40px;">
                 {{ strtoupper(substr($user->username, 0, 1)) }}
             </div>
             <h4 class="mb-1">{{ $user->username }}</h4>

@@ -12,8 +12,8 @@
         <a href="{{ route('users.show', $user->username) }}" class="text-decoration-none">
             <div class="card h-100 user-card">
                 <div class="card-body d-flex align-items-center gap-3">
-                    <div class="avatar rounded-circle text-white d-flex align-items-center justify-content-center flex-shrink-0"
-                        style="width: 60px; height: 60px; font-size: 24px; background: linear-gradient(135deg, #e50914, #b81d24);">
+                    <div class="letter-avatar mx-auto"
+                        style="width: 60px; height: 60px; font-size: 24px;">
                         {{ strtoupper(substr($user->username, 0, 1)) }}
                     </div>
                     <div>
