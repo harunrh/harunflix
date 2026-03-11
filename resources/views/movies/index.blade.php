@@ -78,8 +78,8 @@
             <h2 class="h4"><i class="fas fa-certificate me-2 text-danger"></i>New Releases</h2>
         </div>
         <div class="position-relative">
-            <button class="card-slider-control-prev d-none d-md-block" aria-label="Previous">
-                <i class="fas fa-chevron-left fa-2x"></i>
+            <button class="card-slider-control-prev" aria-label="Previous">
+                <i class="fas fa-chevron-left"></i>
             </button>
             <div class="card-slider">
                 @foreach($newReleases as $movie)
@@ -99,8 +99,8 @@
                 </div>
                 @endforeach
             </div>
-            <button class="card-slider-control-next d-none d-md-block" aria-label="Next">
-                <i class="fas fa-chevron-right fa-2x"></i>
+            <button class="card-slider-control-next" aria-label="Next">
+                <i class="fas fa-chevron-right"></i>
             </button>
         </div>
     </div>
@@ -113,8 +113,8 @@
             <h2 class="h4"><i class="fas fa-star me-2 text-warning"></i>Top Rated on HarunFlix</h2>
         </div>
         <div class="position-relative">
-            <button class="card-slider-control-prev d-none d-md-block" aria-label="Previous">
-                <i class="fas fa-chevron-left fa-2x"></i>
+            <button class="card-slider-control-prev" aria-label="Previous">
+                <i class="fas fa-chevron-left"></i>
             </button>
             <div class="card-slider">
                 @foreach($topRatedByUsers as $movie)
@@ -140,13 +140,12 @@
                 </div>
                 @endforeach
             </div>
-            <button class="card-slider-control-next d-none d-md-block" aria-label="Next">
-                <i class="fas fa-chevron-right fa-2x"></i>
+            <button class="card-slider-control-next" aria-label="Next">
+                <i class="fas fa-chevron-right"></i>
             </button>
         </div>
     </div>
     @endif
-    
 
     <!-- Most Reviewed on HarunFlix -->
     @if($mostReviewed->count() > 0)
@@ -155,8 +154,8 @@
             <h2 class="h4"><i class="fas fa-comments me-2 text-primary"></i>Most Reviewed on HarunFlix</h2>
         </div>
         <div class="position-relative">
-            <button class="card-slider-control-prev d-none d-md-block" aria-label="Previous">
-                <i class="fas fa-chevron-left fa-2x"></i>
+            <button class="card-slider-control-prev" aria-label="Previous">
+                <i class="fas fa-chevron-left"></i>
             </button>
             <div class="card-slider">
                 @foreach($mostReviewed as $movie)
@@ -182,8 +181,8 @@
                 </div>
                 @endforeach
             </div>
-            <button class="card-slider-control-next d-none d-md-block" aria-label="Next">
-                <i class="fas fa-chevron-right fa-2x"></i>
+            <button class="card-slider-control-next" aria-label="Next">
+                <i class="fas fa-chevron-right"></i>
             </button>
         </div>
     </div>
@@ -196,8 +195,8 @@
             <h2 class="h4"><i class="fas fa-clock me-2 text-info"></i>Recently Rated on HarunFlix</h2>
         </div>
         <div class="position-relative">
-            <button class="card-slider-control-prev d-none d-md-block" aria-label="Previous">
-                <i class="fas fa-chevron-left fa-2x"></i>
+            <button class="card-slider-control-prev" aria-label="Previous">
+                <i class="fas fa-chevron-left"></i>
             </button>
             <div class="card-slider">
                 @foreach($recentlyRated as $movie)
@@ -223,8 +222,8 @@
                 </div>
                 @endforeach
             </div>
-            <button class="card-slider-control-next d-none d-md-block" aria-label="Next">
-                <i class="fas fa-chevron-right fa-2x"></i>
+            <button class="card-slider-control-next" aria-label="Next">
+                <i class="fas fa-chevron-right"></i>
             </button>
         </div>
     </div>
@@ -237,8 +236,8 @@
             <h2 class="h4"><i class="fas fa-chart-line me-2 text-success"></i>Trending This Week</h2>
         </div>
         <div class="position-relative">
-            <button class="card-slider-control-prev d-none d-md-block" aria-label="Previous">
-                <i class="fas fa-chevron-left fa-2x"></i>
+            <button class="card-slider-control-prev" aria-label="Previous">
+                <i class="fas fa-chevron-left"></i>
             </button>
             <div class="card-slider">
                 @foreach($trendingMovies as $movie)
@@ -258,8 +257,8 @@
                 </div>
                 @endforeach
             </div>
-            <button class="card-slider-control-next d-none d-md-block" aria-label="Next">
-                <i class="fas fa-chevron-right fa-2x"></i>
+            <button class="card-slider-control-next" aria-label="Next">
+                <i class="fas fa-chevron-right"></i>
             </button>
         </div>
     </div>
@@ -269,17 +268,46 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
+        // Arrow button scroll
         document.querySelectorAll('.card-slider-control-prev').forEach(button => {
             button.addEventListener('click', () => {
-                const slider = button.closest('.content-row').querySelector('.card-slider');
+                const slider = button.closest('.position-relative').querySelector('.card-slider');
                 slider.scrollBy({ left: -600, behavior: 'smooth' });
             });
         });
 
         document.querySelectorAll('.card-slider-control-next').forEach(button => {
             button.addEventListener('click', () => {
-                const slider = button.closest('.content-row').querySelector('.card-slider');
+                const slider = button.closest('.position-relative').querySelector('.card-slider');
                 slider.scrollBy({ left: 600, behavior: 'smooth' });
+            });
+        });
+
+        // Mobile swipe - prevent accidental card clicks during swipe
+        document.querySelectorAll('.card-slider').forEach(slider => {
+            let startX = 0;
+            let scrollStart = 0;
+            let isSwiping = false;
+
+            slider.addEventListener('touchstart', (e) => {
+                startX = e.touches[0].clientX;
+                scrollStart = slider.scrollLeft;
+                isSwiping = false;
+            }, { passive: true });
+
+            slider.addEventListener('touchmove', (e) => {
+                const diff = Math.abs(e.touches[0].clientX - startX);
+                if (diff > 8) {
+                    isSwiping = true;
+                    slider.classList.add('is-swiping');
+                }
+            }, { passive: true });
+
+            slider.addEventListener('touchend', () => {
+                setTimeout(() => {
+                    isSwiping = false;
+                    slider.classList.remove('is-swiping');
+                }, 100);
             });
         });
     });

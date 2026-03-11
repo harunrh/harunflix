@@ -42,6 +42,11 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="{{ route('activity') }}">
+                        <i class="fas fa-history me-1"></i>Activity
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="{{ route('users.index') }}">
                         <i class="fas fa-users me-1"></i>Members
                     </a>
@@ -107,13 +112,13 @@
             <i class="fas fa-film"></i>
             <span>Movies</span>
         </a>
-        <a href="{{ route('home') }}">
+        <a href="{{ route('activity') }}" class="{{ request()->routeIs('activity') ? 'active' : '' }}">
             <i class="fas fa-history"></i>
             <span>Activity</span>
         </a>
         <a href="{{ route('users.index') }}" class="{{ request()->routeIs('users.index') ? 'active' : '' }}">
             <i class="fas fa-users"></i>
-            <span>Users</span>
+            <span>Members</span>
         </a>
         @auth
             <a href="{{ route('profile') }}" class="{{ request()->routeIs('profile') ? 'active' : '' }}">
