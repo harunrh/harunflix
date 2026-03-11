@@ -9,6 +9,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\WatchlistController;
 use App\Http\Controllers\ReviewLikeController;
 use App\Http\Controllers\CinemaController;
+use App\Http\Controllers\ActivityController;
 
 // Auth routes
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -19,6 +20,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Public routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/activity', [ActivityController::class, 'index'])->name('activity');
 Route::get('/movie/{id}', [MovieController::class, 'show'])->name('movie.show');
 Route::get('/search', [MovieController::class, 'search'])->name('movie.search');
 Route::get('/search/live', [MovieController::class, 'liveSearch'])->name('movie.live-search');

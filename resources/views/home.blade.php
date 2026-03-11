@@ -12,23 +12,18 @@
                     <img src="https://image.tmdb.org/t/p/w500{{ $poster }}" alt="Movie Poster">
                 </div>
                 @endforeach
-                
-                <!-- Duplicate for seamless loop -->
                 @foreach(array_slice($heroPosters, 0, 7) as $poster)
                 <div class="poster">
                     <img src="https://image.tmdb.org/t/p/w500{{ $poster }}" alt="Movie Poster">
                 </div>
                 @endforeach
             </div>
-            
             <div class="poster-row poster-row-2">
                 @foreach(array_slice($heroPosters, 7, 7) as $poster)
                 <div class="poster">
                     <img src="https://image.tmdb.org/t/p/w500{{ $poster }}" alt="Movie Poster">
                 </div>
                 @endforeach
-                
-                <!-- Duplicate for seamless loop -->
                 @foreach(array_slice($heroPosters, 7, 7) as $poster)
                 <div class="poster">
                     <img src="https://image.tmdb.org/t/p/w500{{ $poster }}" alt="Movie Poster">
@@ -38,7 +33,6 @@
         </div>
     </div>
     
-    <!-- Overlay with Content -->
     <div class="hero-overlay"></div>
     
     <div class="container position-relative">
@@ -70,18 +64,15 @@
     </div>
 </div>
 
-
 <!-- Top Rated Movies Section -->
 <div class="content-row">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2 class="h4"><i class="fas fa-trophy me-2"></i>Top Rated Movies</h2>
     </div>
-    
     <div class="position-relative">
-        <button class="card-slider-control-prev d-none d-md-block" aria-label="Previous">
-            <i class="fas fa-chevron-left fa-2x"></i>
+        <button class="card-slider-control-prev" aria-label="Previous">
+            <i class="fas fa-chevron-left"></i>
         </button>
-        
         <div class="card-slider">
             @foreach($topRatedMovies as $movie)
             <div class="movie-card-container">
@@ -90,25 +81,18 @@
                         <img src="https://image.tmdb.org/t/p/w500{{ $movie['poster_path'] }}" 
                              alt="{{ $movie['title'] }}"
                              onerror="this.src='{{ asset('images/no-poster.jpg') }}'">
-                        
-                        <div class="movie-rating">
-                            {{ number_format($movie['vote_average'], 1) }}
-                        </div>
-                        
+                        <div class="movie-rating">{{ number_format($movie['vote_average'], 1) }}</div>
                         <div class="card-body">
                             <div class="movie-title">{{ $movie['title'] }}</div>
-                            <div class="movie-year">
-                                {{ isset($movie['release_date']) ? date('Y', strtotime($movie['release_date'])) : 'N/A' }}
-                            </div>
+                            <div class="movie-year">{{ isset($movie['release_date']) ? date('Y', strtotime($movie['release_date'])) : 'N/A' }}</div>
                         </div>
                     </div>
                 </a>
             </div>
             @endforeach
         </div>
-        
-        <button class="card-slider-control-next d-none d-md-block" aria-label="Next">
-            <i class="fas fa-chevron-right fa-2x"></i>
+        <button class="card-slider-control-next" aria-label="Next">
+            <i class="fas fa-chevron-right"></i>
         </button>
     </div>
 </div>
@@ -118,12 +102,10 @@
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2 class="h4"><i class="fas fa-fire me-2"></i>Popular Movies</h2>
     </div>
-    
     <div class="position-relative">
-        <button class="card-slider-control-prev d-none d-md-block" aria-label="Previous">
-            <i class="fas fa-chevron-left fa-2x"></i>
+        <button class="card-slider-control-prev" aria-label="Previous">
+            <i class="fas fa-chevron-left"></i>
         </button>
-        
         <div class="card-slider">
             @foreach($popularMovies as $movie)
             <div class="movie-card-container">
@@ -132,25 +114,18 @@
                         <img src="https://image.tmdb.org/t/p/w500{{ $movie['poster_path'] }}" 
                              alt="{{ $movie['title'] }}"
                              onerror="this.src='{{ asset('images/no-poster.jpg') }}'">
-                        
-                        <div class="movie-rating">
-                            {{ number_format($movie['vote_average'], 1) }}
-                        </div>
-                        
+                        <div class="movie-rating">{{ number_format($movie['vote_average'], 1) }}</div>
                         <div class="card-body">
                             <div class="movie-title">{{ $movie['title'] }}</div>
-                            <div class="movie-year">
-                                {{ isset($movie['release_date']) ? date('Y', strtotime($movie['release_date'])) : 'N/A' }}
-                            </div>
+                            <div class="movie-year">{{ isset($movie['release_date']) ? date('Y', strtotime($movie['release_date'])) : 'N/A' }}</div>
                         </div>
                     </div>
                 </a>
             </div>
             @endforeach
         </div>
-        
-        <button class="card-slider-control-next d-none d-md-block" aria-label="Next">
-            <i class="fas fa-chevron-right fa-2x"></i>
+        <button class="card-slider-control-next" aria-label="Next">
+            <i class="fas fa-chevron-right"></i>
         </button>
     </div>
 </div>
@@ -160,12 +135,10 @@
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2 class="h4"><i class="fas fa-chart-line me-2"></i>Trending This Week</h2>
     </div>
-    
     <div class="position-relative">
-        <button class="card-slider-control-prev d-none d-md-block" aria-label="Previous">
-            <i class="fas fa-chevron-left fa-2x"></i>
+        <button class="card-slider-control-prev" aria-label="Previous">
+            <i class="fas fa-chevron-left"></i>
         </button>
-        
         <div class="card-slider">
             @foreach($trendingMovies as $movie)
             <div class="movie-card-container">
@@ -174,25 +147,18 @@
                         <img src="https://image.tmdb.org/t/p/w500{{ $movie['poster_path'] }}" 
                              alt="{{ $movie['title'] }}"
                              onerror="this.src='{{ asset('images/no-poster.jpg') }}'">
-                        
-                        <div class="movie-rating">
-                            {{ number_format($movie['vote_average'], 1) }}
-                        </div>
-                        
+                        <div class="movie-rating">{{ number_format($movie['vote_average'], 1) }}</div>
                         <div class="card-body">
                             <div class="movie-title">{{ $movie['title'] }}</div>
-                            <div class="movie-year">
-                                {{ isset($movie['release_date']) ? date('Y', strtotime($movie['release_date'])) : 'N/A' }}
-                            </div>
+                            <div class="movie-year">{{ isset($movie['release_date']) ? date('Y', strtotime($movie['release_date'])) : 'N/A' }}</div>
                         </div>
                     </div>
                 </a>
             </div>
             @endforeach
         </div>
-        
-        <button class="card-slider-control-next d-none d-md-block" aria-label="Next">
-            <i class="fas fa-chevron-right fa-2x"></i>
+        <button class="card-slider-control-next" aria-label="Next">
+            <i class="fas fa-chevron-right"></i>
         </button>
     </div>
 </div>
@@ -204,7 +170,6 @@
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h2 class="h4"><i class="fas fa-history me-2"></i>Recent Activity</h2>
             </div>
-            
             <div class="card">
                 <div class="card-body p-0">
                     @if($recentReviews->count() > 0)
@@ -212,7 +177,7 @@
                             @foreach($recentReviews as $review)
                             <div class="list-group-item p-3">
                                 <div class="d-flex">
-                                    <div class="avatar rounded-circle text-white d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px; font-size: 20px;">
+                                    <div class="letter-avatar me-3" style="width:50px;height:50px;font-size:20px;">
                                         {{ strtoupper(substr($review->user->username, 0, 1)) }}
                                     </div>
                                     <div class="flex-grow-1">
@@ -279,14 +244,14 @@
         // Slider controls
         document.querySelectorAll('.card-slider-control-prev').forEach(button => {
             button.addEventListener('click', () => {
-                const slider = button.closest('.content-row').querySelector('.card-slider');
+                const slider = button.closest('.position-relative').querySelector('.card-slider');
                 slider.scrollBy({ left: -600, behavior: 'smooth' });
             });
         });
 
         document.querySelectorAll('.card-slider-control-next').forEach(button => {
             button.addEventListener('click', () => {
-                const slider = button.closest('.content-row').querySelector('.card-slider');
+                const slider = button.closest('.position-relative').querySelector('.card-slider');
                 slider.scrollBy({ left: 600, behavior: 'smooth' });
             });
         });
@@ -298,15 +263,12 @@
 
         searchInput.addEventListener('input', () => {
             const query = searchInput.value.trim();
-
             clearTimeout(searchTimeout);
-
             if (query.length < 2) {
                 resultsBox.innerHTML = '';
                 resultsBox.style.display = 'none';
                 return;
             }
-
             searchTimeout = setTimeout(() => {
                 fetch(`/search/live?query=${encodeURIComponent(query)}`)
                     .then(res => res.json())
@@ -315,7 +277,6 @@
                             resultsBox.style.display = 'none';
                             return;
                         }
-
                         resultsBox.innerHTML = movies.map(movie => `
                             <a href="${movie.url}" class="live-search-item">
                                 <img src="${movie.poster ?? 'https://via.placeholder.com/40x60?text=N/A'}" alt="${movie.title}">
@@ -325,13 +286,11 @@
                                 </div>
                             </a>
                         `).join('');
-
                         resultsBox.style.display = 'block';
                     });
             }, 300);
         });
 
-        // Hide results when clicking outside
         document.addEventListener('click', (e) => {
             if (!searchInput.contains(e.target) && !resultsBox.contains(e.target)) {
                 resultsBox.style.display = 'none';
