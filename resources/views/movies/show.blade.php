@@ -255,6 +255,21 @@
     </div>
 </div>
 
+<!-- Nearby Cinemas Section -->
+<div class="card mt-4" id="cinemasSection">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0"><i class="fas fa-map-marker-alt me-2"></i>Nearby Cinemas</h5>
+        <button class="btn btn-primary btn-sm" id="findCinemasBtn">
+            <i class="fas fa-location-arrow me-1"></i>Find Cinemas Near Me
+        </button>
+    </div>
+    <div class="card-body" id="cinemasBody">
+        <p class="text-muted text-center mb-0">
+            <i class="fas fa-film me-1"></i> Click the button to find cinemas within 10km of your location.
+        </p>
+    </div>
+</div>
+
 <!-- Review Modal -->
 @auth
 <div class="modal fade" id="reviewModal" tabindex="-1" aria-hidden="true">
@@ -425,12 +440,12 @@
                         <div class="list-group-item p-3">
                             <div class="d-flex">
                                 <div class="letter-avatar me-3" style="width: 50px; height: 50px; font-size: 20px;">
-                                    {{ strtoupper(substr(auth()->user()->username, 0, 1)) }}
+                                    {{ auth()->check() ? strtoupper(substr(auth()->user()->username, 0, 1)) : '' }}
                                 </div>
                                 <div class="flex-grow-1">
                                     <div class="d-flex justify-content-between mb-2 flex-wrap">
                                         <div>
-                                            <strong>{{ auth()->user()->username }}</strong>
+                                            <strong>{{ auth()->check() ? auth()->user()->username : '' }}</strong>
                                             <span class="badge bg-primary ms-2">${parseFloat(data.review.rating).toFixed(1)}/10</span>
                                             <span class="badge bg-success ms-1">Your Review</span>
                                         </div>
@@ -468,6 +483,83 @@
                     submitBtn.disabled = false;
                     submitBtn.textContent = 'Submit Review';
                 }
+            });
+        }
+
+        // Nearby Cinemas
+        const findCinemasBtn = document.getElementById('findCinemasBtn');
+        if (findCinemasBtn) {
+            findCinemasBtn.addEventListener('click', () => {
+                if (!navigator.geolocation) {
+                    showToast('Geolocation is not supported by your browser.', 'error');
+                    return;
+                }
+
+                const cinemasBody = document.getElementById('cinemasBody');
+                findCinemasBtn.disabled = true;
+                findCinemasBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Locating...';
+                cinemasBody.innerHTML = '<p class="text-muted text-center mb-0"><i class="fas fa-spinner fa-spin me-1"></i>Getting your location...</p>';
+
+                navigator.geolocation.getCurrentPosition(
+                    async (position) => {
+                        const lat = position.coords.latitude;
+                        const lon = position.coords.longitude;
+
+                        cinemasBody.innerHTML = '<p class="text-muted text-center mb-0"><i class="fas fa-spinner fa-spin me-1"></i>Searching for nearby cinemas...</p>';
+
+                        try {
+                            const res = await fetch(`/cinemas/nearby?lat=${lat}&lon=${lon}`);
+                            const data = await res.json();
+
+                            if (!data.success) {
+                                cinemasBody.innerHTML = `<p class="text-danger text-center mb-0"><i class="fas fa-exclamation-circle me-1"></i>${data.message}</p>`;
+                                return;
+                            }
+
+                            if (data.count === 0) {
+                                cinemasBody.innerHTML = '<p class="text-muted text-center mb-0"><i class="fas fa-map-marker-alt me-1"></i>No cinemas found within 10km of your location.</p>';
+                                return;
+                            }
+
+                            const rows = data.cinemas.map(cinema => `
+                                <div class="list-group-item d-flex justify-content-between align-items-start p-3">
+                                    <div>
+                                        <strong><i class="fas fa-film me-1 text-primary"></i>${cinema.name}</strong>
+                                        ${cinema.address ? `<br><small class="text-muted"><i class="fas fa-map-pin me-1"></i>${cinema.address}</small>` : ''}
+                                    </div>
+                                    <div class="text-end ms-3">
+                                        <span class="badge bg-secondary mb-1">${cinema.distance} km away</span><br>
+                                        <a href="${cinema.maps_url}" target="_blank" class="btn btn-outline-primary btn-sm mt-1">
+                                            <i class="fas fa-map me-1"></i>Directions
+                                        </a>
+                                    </div>
+                                </div>
+                            `).join('');
+
+                            cinemasBody.innerHTML = `
+                                <p class="text-muted small px-3 pt-2 mb-1">
+                                    <i class="fas fa-check-circle text-success me-1"></i>Found ${data.count} cinema${data.count !== 1 ? 's' : ''} within 10km of your location.
+                                </p>
+                                <div class="list-group list-group-flush">${rows}</div>
+                            `;
+                        } catch (err) {
+                            cinemasBody.innerHTML = '<p class="text-danger text-center mb-0"><i class="fas fa-exclamation-circle me-1"></i>Failed to fetch cinema data. Please try again.</p>';
+                        } finally {
+                            findCinemasBtn.disabled = false;
+                            findCinemasBtn.innerHTML = '<i class="fas fa-location-arrow me-1"></i>Find Cinemas Near Me';
+                        }
+                    },
+                    (error) => {
+                        let msg = 'Could not get your location.';
+                        if (error.code === error.PERMISSION_DENIED) msg = 'Location permission was denied. Please allow access in your browser.';
+                        else if (error.code === error.POSITION_UNAVAILABLE) msg = 'Location information is unavailable.';
+                        else if (error.code === error.TIMEOUT) msg = 'Location request timed out.';
+                        cinemasBody.innerHTML = `<p class="text-danger text-center mb-0"><i class="fas fa-exclamation-circle me-1"></i>${msg}</p>`;
+                        findCinemasBtn.disabled = false;
+                        findCinemasBtn.innerHTML = '<i class="fas fa-location-arrow me-1"></i>Find Cinemas Near Me';
+                    },
+                    { timeout: 10000, maximumAge: 60000 }
+                );
             });
         }
     });

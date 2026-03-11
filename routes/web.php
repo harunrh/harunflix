@@ -8,6 +8,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\WatchlistController;
 use App\Http\Controllers\ReviewLikeController;
+use App\Http\Controllers\CinemaController;
 
 // Auth routes
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -25,6 +26,7 @@ Route::get('/users', [ProfileController::class, 'allUsers'])->name('users.index'
 Route::get('/users/{username}', [ProfileController::class, 'show'])->name('users.show');
 Route::get('/genre/{id}', [MovieController::class, 'byGenre'])->name('movie.genre');
 Route::get('/movies', [MovieController::class, 'index'])->name('movies.index');
+Route::get('/cinemas/nearby', [CinemaController::class, 'nearby'])->name('cinemas.nearby');
 
 // Protected routes
 Route::middleware('auth')->group(function () {
