@@ -34,7 +34,7 @@
                 <img src="{{ asset('images/harunflix.png') }}" alt="HarunFlix Logo">
             </a>
 
-            <!-- Left side nav links (next to logo) -->
+            <!-- Left side nav links (desktop only) -->
             <ul class="navbar-nav me-auto d-none d-lg-flex">
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('movies.index') }}">
@@ -53,21 +53,6 @@
             </button>
 
             <div class="collapse navbar-collapse" id="navbarNav">
-                <!-- Mobile only left links -->
-                <ul class="navbar-nav me-auto d-lg-none">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('movies.index') }}">
-                            <i class="fas fa-film me-1"></i>Movies
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('users.index') }}">
-                            <i class="fas fa-users me-1"></i>Members
-                        </a>
-                    </li>
-                </ul>
-
-                <!-- Right side -->
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item me-2">
                         <a class="nav-link theme-toggle" id="theme-toggle">
@@ -112,6 +97,37 @@
         @yield('content')
     </main>
 
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-bottom-nav">
+        <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'active' : '' }}">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="{{ route('movies.index') }}" class="{{ request()->routeIs('movies.index') ? 'active' : '' }}">
+            <i class="fas fa-film"></i>
+            <span>Movies</span>
+        </a>
+        <a href="{{ route('home') }}">
+            <i class="fas fa-history"></i>
+            <span>Activity</span>
+        </a>
+        <a href="{{ route('users.index') }}" class="{{ request()->routeIs('users.index') ? 'active' : '' }}">
+            <i class="fas fa-users"></i>
+            <span>Users</span>
+        </a>
+        @auth
+            <a href="{{ route('profile') }}" class="{{ request()->routeIs('profile') ? 'active' : '' }}">
+                <i class="fas fa-user-circle"></i>
+                <span>Profile</span>
+            </a>
+        @else
+            <a href="{{ route('login') }}" class="{{ request()->routeIs('login') ? 'active' : '' }}">
+                <i class="fas fa-sign-in-alt"></i>
+                <span>Login</span>
+            </a>
+        @endauth
+    </nav>
+
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -151,7 +167,6 @@
         const toastMessage = document.getElementById('toastMessage');
         
         toastMessage.textContent = message;
-        
         toast.className = 'toast align-items-center text-white border-0';
         
         if (type === 'success') {
